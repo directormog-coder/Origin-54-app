@@ -1,39 +1,31 @@
-export default function Loading() {
-  return (
-    <div style={{
-      minHeight: "100vh",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      gap: "24px",
-      background: "#FAF3E8",
-    }}>
-      {/* Animated gold ring */}
-      <div style={{
-        width: "56px",
-        height: "56px",
-        borderRadius: "50%",
-        border: "2px solid rgba(200,146,42,0.2)",
-        borderTopColor: "#C8922A",
-        animation: "spin 0.9s linear infinite",
-      }} />
+import type { Metadata } from "next"
 
-      <div style={{
+export const metadata: Metadata = {
+  title: "LOADING | Origin 54",
+}
+
+export default function Page() {
+  return (
+    <div style={{ padding: "48px", maxWidth: "1280px", margin: "0 auto" }}>
+      <div style={{ width: "1px", height: "48px", background: "#C8922A", marginBottom: "32px" }} />
+      <h1 style={{
         fontFamily: "var(--font-bebas)",
-        fontSize: "13px",
-        letterSpacing: "0.3em",
-        color: "#C8922A",
+        fontSize: "clamp(48px, 6vw, 80px)",
+        letterSpacing: "0.08em",
+        color: "#2C3E50",
+        lineHeight: 1,
+        marginBottom: "24px",
       }}>
         LOADING
-      </div>
-
-      <style>{`
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-      `}</style>
+      </h1>
+      <p style={{
+        fontFamily: "var(--font-cormorant)",
+        fontSize: "20px",
+        fontStyle: "italic",
+        color: "rgba(44,62,80,0.6)",
+      }}>
+        Coming soon — this page is under construction.
+      </p>
     </div>
   )
 }
-
