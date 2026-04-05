@@ -2,8 +2,6 @@
 
 import Link from "next/link";
 import Image from "next/image";
-// 1. Import the logo directly as a module
-import logoImg from "../public/logo.png";
 
 export default function HomePage() {
   return (
@@ -18,9 +16,9 @@ export default function HomePage() {
         transition: "background 0.4s ease",
       }}>
         <Link href="/" style={{ display: "flex", alignItems: "center", gap: "12px", textDecoration: "none" }}>
-          {/* 2. Use the imported module instead of a string path */}
+          {/* Use string path for public files */}
           <Image 
-            src={logoImg} 
+            src="/logo.png" 
             alt="Origin 54" 
             width={48} 
             height={48} 
