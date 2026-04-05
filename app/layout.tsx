@@ -35,9 +35,8 @@ export const metadata: Metadata = {
     description: "African luxury fashion rooted in heritage.",
     type: "website",
     locale: "en_ZA",
-    images: ["/icon-512.png"], // Social share image
+    images: ["/icon-512.png"],
   },
-  // PWA manifest and icons
   manifest: "/manifest.json",
   icons: {
     icon: [
