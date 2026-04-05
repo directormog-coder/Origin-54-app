@@ -1,15 +1,14 @@
-<<<<<<< HEAD
-=======
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Initialize the Supabase client with the Database types
+export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey);
 
 export type Database = {
   public: {
-    tables: {
+    Tables: {
       products: {
         Row: {
           id: string;
@@ -21,11 +20,13 @@ export type Database = {
           created_at: string;
         };
         Insert: {
+          id?: string; // Optional because it's usually auto-generated
           name: string;
           description: string;
           price: number;
           category: string;
           image_url: string;
+          created_at?: string;
         };
         Update: {
           name?: string;
@@ -46,6 +47,7 @@ export type Database = {
           id: string;
           email: string;
           role?: 'user' | 'admin';
+          created_at?: string;
         };
         Update: {
           email?: string;
@@ -55,4 +57,3 @@ export type Database = {
     };
   };
 };
->>>>>>> b832d71d28501120338893489275d31a506914bf
