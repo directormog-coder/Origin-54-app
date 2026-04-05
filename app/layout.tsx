@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Bebas_Neue } from "next/font/google";
 import "./globals.css";
 
@@ -16,6 +16,12 @@ const bebas = Bebas_Neue({
   display: "swap",
 });
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#C8922A",
+};
+
 export const metadata: Metadata = {
   title: {
     default: "Origin 54 — The Asili Collective",
@@ -29,6 +35,26 @@ export const metadata: Metadata = {
     description: "African luxury fashion rooted in heritage.",
     type: "website",
     locale: "en_ZA",
+    images: ["/icon-512.png"], // Social share image
+  },
+  // PWA manifest and icons
+  manifest: "/manifest.json",
+  icons: {
+    icon: [
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+    ],
+    shortcut: ["/favicon-32x32.png"],
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Origin 54",
   },
 };
 
