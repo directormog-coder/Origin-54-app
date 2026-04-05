@@ -4,7 +4,9 @@ export async function POST(request: Request) {
   try {
     const { email, amount, productName } = await request.json();
 
-    // The Paystack Secret Key must be in your .env.local
+    // This automatically detects if you're on Localhost or Vercel
+    const origin = request.headers.get("origin");
+
     const response = await fetch('https://api.paystack.co/transaction/initialize', {
       method: 'POST',
       headers: {
@@ -13,9 +15,13 @@ export async function POST(request: Request) {
       },
       body: JSON.stringify({
         email,
-        amount: Math.round(amount * 100), // Rands to Cents conversion
-        callback_url: `${request.headers.get("origin")}/success`,
-        metadata: { custom_fields: [{ display_name: "Product", variable_name: "product", value: productName }] }
+        amount: Math.round(amount * 100), 
+        callback_url: `${origin}/success`, // Automatically handles the redirect
+        metadata: { 
+          custom_fields: [
+            { display_name: "Product", variable_name: "product", value: productName }
+          ] 
+        }
       }),
     });
 
