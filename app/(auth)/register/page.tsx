@@ -1,5 +1,3 @@
-"use client"
-
 import Link from "next/link"
 import type { Metadata } from "next"
 
@@ -8,6 +6,13 @@ export const metadata: Metadata = {
 }
 
 export default function RegisterPage() {
+  const nameFields = ["First Name", "Last Name"];
+  const otherFields = [
+    { label: "Email Address", type: "email", placeholder: "your@email.com" },
+    { label: "Password", type: "password", placeholder: "Min. 8 characters" },
+    { label: "Confirm Password", type: "password", placeholder: "Repeat password" },
+  ];
+
   return (
     <div>
       <h1 style={{
@@ -31,7 +36,7 @@ export default function RegisterPage() {
 
       <form style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
-          {["First Name", "Last Name"].map((label) => (
+          {nameFields.map((label) => (
             <div key={label}>
               <label style={{
                 fontFamily: "var(--font-cormorant)",
@@ -56,18 +61,12 @@ export default function RegisterPage() {
                   color: "#2C3E50",
                   outline: "none",
                 }}
-                onFocus={(e) => (e.currentTarget.style.borderColor = "#C8922A")}
-                onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(44,62,80,0.2)")}
               />
             </div>
           ))}
         </div>
 
-        {[
-          { label: "Email Address", type: "email", placeholder: "your@email.com" },
-          { label: "Password", type: "password", placeholder: "Min. 8 characters" },
-          { label: "Confirm Password", type: "password", placeholder: "Repeat password" },
-        ].map((field) => (
+        {otherFields.map((field) => (
           <div key={field.label}>
             <label style={{
               fontFamily: "var(--font-cormorant)",
@@ -93,8 +92,6 @@ export default function RegisterPage() {
                 color: "#2C3E50",
                 outline: "none",
               }}
-              onFocus={(e) => (e.currentTarget.style.borderColor = "#C8922A")}
-              onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(44,62,80,0.2)")}
             />
           </div>
         ))}
@@ -111,10 +108,7 @@ export default function RegisterPage() {
             padding: "16px",
             cursor: "pointer",
             marginTop: "8px",
-            transition: "background 0.2s ease",
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.background = "#B85C2C")}
-          onMouseLeave={(e) => (e.currentTarget.style.background = "#C8922A")}
         >
           CREATE ACCOUNT
         </button>
@@ -135,5 +129,4 @@ export default function RegisterPage() {
     </div>
   )
 }
-
 
