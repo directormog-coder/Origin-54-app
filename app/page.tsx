@@ -16,7 +16,15 @@ export default function HomePage() {
         transition: "background 0.4s ease",
       }}>
         <Link href="/" style={{ display: "flex", alignItems: "center", gap: "12px", textDecoration: "none" }}>
-          <Image src="/logo.png" alt="Origin 54" width={48} height={48} style={{ borderRadius: "50%" }} />
+          <Image 
+            src="/logo.png" 
+            alt="Origin 54" 
+            width={48} 
+            height={48} 
+            style={{ borderRadius: "50%" }}
+            priority
+            unoptimized
+          />
           <div>
             <div style={{ fontFamily: "var(--font-bebas)", fontSize: "20px", letterSpacing: "0.1em", color: "#2C3E50", lineHeight: 1 }}>ORIGIN 54</div>
             <div style={{ fontFamily: "var(--font-cormorant)", fontSize: "10px", color: "#C8922A", letterSpacing: "0.15em", fontStyle: "italic" }}>The Asili Collective</div>
