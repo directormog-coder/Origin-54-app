@@ -1,26 +1,22 @@
-import { NextResponse } from "next/server"
-import type { NextRequest } from "next/server"
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 
-const PROTECTED = ["/admin", "/orders", "/account", "/checkout"]
-
-export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl
-  const isProtected = PROTECTED.some(path => pathname.startsWith(path))
-  const token = request.cookies.get("auth-token")?.value
-
-  if (isProtected && !token) {
-    return NextResponse.redirect(new URL("/login", request.url))
-  }
-
-  return NextResponse.next()
+// The function MUST be named 'proxy' or be the default export
+export default function proxy(request: NextRequest) {
+  // Add any logic here (like redirecting unauthorized users)
+  return NextResponse.next();
 }
 
+// Optional: Limit the proxy to specific paths
 export const config = {
   matcher: [
-    "/admin/:path*",
-    "/orders/:path*",
-    "/account/:path*",
-    "/checkout/:path*",
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
   ],
-}
-
+};
