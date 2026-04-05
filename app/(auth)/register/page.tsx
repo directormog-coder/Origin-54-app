@@ -33,7 +33,6 @@ export default function RegisterPage() {
       }}>
         Create your Origin 54 account
       </p>
-
       <form style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
           {nameFields.map((label) => (
