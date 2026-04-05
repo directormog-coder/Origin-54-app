@@ -1,20 +1,20 @@
-import Link from "next/link"
-import type { Metadata } from "next"
+import Link from "next/link";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Create Account | Origin 54",
-}
+};
 
 export default function RegisterPage() {
   const nameFields = ["First Name", "Last Name"];
   const otherFields = [
-    { label: "Email Address", type: "email", placeholder: "your@email.com" },
-    { label: "Password", type: "password", placeholder: "Min. 8 characters" },
-    { label: "Confirm Password", type: "password", placeholder: "Repeat password" },
+    { label: "Email Address", name: "email", type: "email", placeholder: "your@email.com" },
+    { label: "Password", name: "password", type: "password", placeholder: "Min. 8 characters" },
+    { label: "Confirm Password", name: "confirm", type: "password", placeholder: "Repeat password" },
   ];
 
   return (
-    <div>
+    <div style={{ maxWidth: "400px", margin: "0 auto" }}>
       <h1 style={{
         fontFamily: "var(--font-bebas)",
         fontSize: "40px",
@@ -33,6 +33,7 @@ export default function RegisterPage() {
       }}>
         Create your Origin 54 account
       </p>
+      
       <form style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
           {nameFields.map((label) => (
@@ -50,6 +51,7 @@ export default function RegisterPage() {
               </label>
               <input
                 type="text"
+                required
                 style={{
                   width: "100%",
                   padding: "14px 16px",
@@ -80,7 +82,9 @@ export default function RegisterPage() {
             </label>
             <input
               type={field.type}
+              name={field.name}
               placeholder={field.placeholder}
+              required
               style={{
                 width: "100%",
                 padding: "14px 16px",
@@ -126,6 +130,5 @@ export default function RegisterPage() {
         </Link>
       </p>
     </div>
-  )
+  );
 }
-
