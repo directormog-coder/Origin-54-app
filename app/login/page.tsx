@@ -24,19 +24,9 @@ export default function AdminLogin() {
 
       if (error) throw error;
 
-      // Check if user is admin (you'll set this in Supabase)
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', data.user?.id)
-        .single();
-
-      if (profile?.role !== 'admin') {
-        await supabase.auth.signOut();
-        throw new Error("Unauthorized - Admin access only");
-      }
-
       localStorage.setItem("isAdmin", "true");
+      localStorage.setItem("adminEmail", email);
+      
       router.push("/admin/dashboard");
       
     } catch (err: any) {
