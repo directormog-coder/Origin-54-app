@@ -2,8 +2,9 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
-    const { email, amount, metadata } = await request.json();
+    const { email, amount, productName } = await request.json();
 
+    // The Paystack Secret Key must be in your .env.local
     const response = await fetch('https://api.paystack.co/transaction/initialize', {
       method: 'POST',
       headers: {
@@ -12,9 +13,9 @@ export async function POST(request: Request) {
       },
       body: JSON.stringify({
         email,
-        amount: Math.round(amount * 100), // Rands to Cents
+        amount: Math.round(amount * 100), // Rands to Cents conversion
         callback_url: `${request.headers.get("origin")}/success`,
-        metadata,
+        metadata: { custom_fields: [{ display_name: "Product", variable_name: "product", value: productName }] }
       }),
     });
 
