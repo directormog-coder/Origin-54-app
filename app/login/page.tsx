@@ -2,23 +2,47 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase";
 
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Simple admin check (replace with your actual auth)
-    if (email === "admin@origin54.com" && password === "your-secure-password") {
-      // Set admin session
+    setLoading(true);
+    setError("");
+
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) throw error;
+
+      // Check if user is admin (you'll set this in Supabase)
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', data.user?.id)
+        .single();
+
+      if (profile?.role !== 'admin') {
+        await supabase.auth.signOut();
+        throw new Error("Unauthorized - Admin access only");
+      }
+
       localStorage.setItem("isAdmin", "true");
       router.push("/admin/dashboard");
-    } else {
-      setError("Invalid credentials");
+      
+    } catch (err: any) {
+      setError(err.message || "Login failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -27,14 +51,15 @@ export default function AdminLogin() {
       <form onSubmit={handleLogin} className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
         <h1 className="text-2xl font-bold text-[#2C3E50] mb-6 font-display">Admin Login</h1>
         
-        {error && <p className="text-red-500 mb-4">{error}</p>}
+        {error && <p className="text-red-500 mb-4 text-sm">{error}</p>}
         
         <input
           type="email"
           placeholder="Admin Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full p-3 mb-4 border border-gray-300 rounded"
+          className="w-full p-3 mb-4 border border-gray-300 rounded focus:outline-none focus:border-[#C8922A]"
+          required
         />
         
         <input
@@ -42,17 +67,18 @@ export default function AdminLogin() {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full p-3 mb-6 border border-gray-300 rounded"
+          className="w-full p-3 mb-6 border border-gray-300 rounded focus:outline-none focus:border-[#C8922A]"
+          required
         />
         
         <button
           type="submit"
-          className="w-full bg-[#C8922A] text-white p-3 rounded font-display"
+          disabled={loading}
+          className="w-full bg-[#C8922A] text-white p-3 rounded font-display hover:bg-[#B85C2C] transition-colors disabled:opacity-50"
         >
-          SIGN IN
+          {loading ? "SIGNING IN..." : "SIGN IN"}
         </button>
       </form>
     </div>
   );
 }
-
