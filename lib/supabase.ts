@@ -25,8 +25,31 @@ export type Database = {
           category: string;
           image_url: string;
         };
+        Update: {
+          name?: string;
+          description?: string;
+          price?: number;
+          category?: string;
+          image_url?: string;
+        };
+      };
+      profiles: {
+        Row: {
+          id: string;
+          email: string;
+          role: 'user' | 'admin';
+          created_at: string;
+        };
+        Insert: {
+          id: string;
+          email: string;
+          role?: 'user' | 'admin';
+        };
+        Update: {
+          email?: string;
+          role?: 'user' | 'admin';
+        };
       };
     };
   };
 };
-
