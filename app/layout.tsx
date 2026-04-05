@@ -38,7 +38,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    /* Added suppressHydrationWarning here to stop the refresh loop */
     <html 
       lang="en" 
       className={`${cormorant.variable} ${bebas.variable}`}
