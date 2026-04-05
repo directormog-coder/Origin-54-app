@@ -8,9 +8,9 @@ export const metadata: Metadata = {
 export default function RegisterPage() {
   const nameFields = ["First Name", "Last Name"];
   const otherFields = [
-    { label: "Email Address", type: "email", placeholder: "your@email.com" },
-    { label: "Password", type: "password", placeholder: "Min. 8 characters" },
-    { label: "Confirm Password", type: "password", placeholder: "Repeat password" },
+    { label: "Email Address", name: "email", type: "email", placeholder: "your@email.com" },
+    { label: "Password", name: "password", type: "password", placeholder: "Min. 8 characters" },
+    { label: "Confirm Password", name: "confirm", type: "password", placeholder: "Repeat password" },
   ];
 
   const inputStyle = {
@@ -56,7 +56,7 @@ export default function RegisterPage() {
         {otherFields.map((field) => (
           <div key={field.label}>
             <label style={labelStyle}>{field.label}</label>
-            <input type={field.type} placeholder={field.placeholder} style={inputStyle} required />
+            <input type={field.type} name={field.name} placeholder={field.placeholder} style={inputStyle} required />
           </div>
         ))}
 
