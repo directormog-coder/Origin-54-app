@@ -1,5 +1,3 @@
-"use client"
-
 import Link from "next/link"
 import type { Metadata } from "next"
 
@@ -54,10 +52,7 @@ export default function LoginPage() {
               fontSize: "16px",
               color: "#2C3E50",
               outline: "none",
-              transition: "border-color 0.2s ease",
             }}
-            onFocus={(e) => (e.currentTarget.style.borderColor = "#C8922A")}
-            onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(44,62,80,0.2)")}
           />
         </div>
 
@@ -85,10 +80,7 @@ export default function LoginPage() {
               fontSize: "16px",
               color: "#2C3E50",
               outline: "none",
-              transition: "border-color 0.2s ease",
             }}
-            onFocus={(e) => (e.currentTarget.style.borderColor = "#C8922A")}
-            onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(44,62,80,0.2)")}
           />
           <div style={{ textAlign: "right", marginTop: "8px" }}>
             <Link href="/forgot-password" style={{
@@ -114,10 +106,7 @@ export default function LoginPage() {
             padding: "16px",
             cursor: "pointer",
             marginTop: "8px",
-            transition: "background 0.2s ease",
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.background = "#C8922A")}
-          onMouseLeave={(e) => (e.currentTarget.style.background = "#2C3E50")}
         >
           SIGN IN
         </button>
@@ -138,5 +127,3 @@ export default function LoginPage() {
     </div>
   )
 }
-
-
