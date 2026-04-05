@@ -4,7 +4,6 @@ export async function POST(request: Request) {
   try {
     const { email, amount, metadata } = await request.json();
 
-    // Paystack amounts are in cents (e.g., R150.00 = 15000)
     const response = await fetch('https://api.paystack.co/transaction/initialize', {
       method: 'POST',
       headers: {
@@ -13,22 +12,17 @@ export async function POST(request: Request) {
       },
       body: JSON.stringify({
         email,
-        amount: amount * 100, 
+        amount: Math.round(amount * 100), // Rands to Cents
         callback_url: `${request.headers.get("origin")}/success`,
         metadata,
       }),
     });
 
     const data = await response.json();
+    if (!data.status) throw new Error(data.message);
 
-    if (!data.status) {
-      throw new Error(data.message);
-    }
-
-    // This returns the authorization_url to redirect the user
     return NextResponse.json({ url: data.data.authorization_url });
   } catch (err: any) {
-    console.error("Paystack Error:", err.message);
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
