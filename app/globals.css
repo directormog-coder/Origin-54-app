@@ -1,46 +1,25 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --gold: #C59D3F;
-  --gold-light: #E9C162;
-  --terracotta: #BA6E3C;
-  --tan: #DAA15F;
-  --charcoal: #242D33;
   --cream: #F8F1EA;
-  --cream-dark: #EFE6DC;
-  
-  --font-display: "Bebas Neue", sans-serif;
-  --font-serif: "Cormorant Garamond", serif;
+  --cream-dark: #F2E8DA;
+  --gold: #C59D3F;
+  --tan: #A6864B;
+  --charcoal: #1A1A1A;
+  --font-serif: var(--font-serif);
+  --font-display: var(--font-display);
 }
 
 body {
   background-color: var(--cream);
   color: var(--charcoal);
   font-family: var(--font-serif);
-  -webkit-font-smoothing: antialiased;
 }
 
-.font-display { font-family: var(--font-display); letter-spacing: 0.1em; }
-
-.tribal-bg {
-  background-image: 
-    repeating-linear-gradient(45deg, transparent, transparent 15px, rgba(197, 157, 63, 0.03) 15px, rgba(197, 157, 63, 0.03) 16px),
-    repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(197, 157, 63, 0.03) 15px, rgba(197, 157, 63, 0.03) 16px);
-}
-
+/* Custom Utility for Origin 54 Buttons */
 .btn-gold {
-  background-color: var(--gold);
-  color: white;
-  transition: all 0.3s ease;
-  padding: 1rem 2.5rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.btn-gold:hover {
-  background-color: var(--tan);
-  transform: translateY(-2px);
+  @apply bg-[var(--gold)] text-white px-8 py-4 font-display tracking-widest 
+  uppercase transition-all duration-300 hover:bg-[var(--tan)] disabled:opacity-50;
 }
