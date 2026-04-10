@@ -1,45 +1,46 @@
 @import "tailwindcss";
 
 :root {
-  /* Exact Colors Picked from your Logo.png */
-  --gold: #C59D3F;           /* The main gold ring/text */
-  --gold-light: #E9C162;     /* The lighter sun rays in the map */
-  --terracotta: #BA6E3C;     /* The deep reddish-brown in the map */
-  --tan: #DAA15F;            /* The medium orange-tan in the map */
-  --charcoal: #242D33;       /* The "ORIGIN 54" dark text color */
-  --cream: #F8F1EA;          /* The exact off-white/cream logo background */
-  --cream-dark: #EFE6DC;     /* A slightly darker shade for hover states */
+  /* Exact Colors from your Logo */
+  --gold: #C59D3F;
+  --gold-light: #E9C162;
+  --terracotta: #BA6E3C;
+  --tan: #DAA15F;
+  --charcoal: #242D33;
+  --cream: #F8F1EA;
+  --cream-dark: #EFE6DC;
   
-  /* Fonts */
-  --font-cormorant: var(--font-cormorant);
-  --font-bebas: var(--font-bebas);
+  --font-display: "Bebas Neue", sans-serif;
+  --font-serif: "Cormorant Garamond", serif;
 }
 
 body {
   background-color: var(--cream);
   color: var(--charcoal);
-  font-family: var(--font-cormorant), Georgia, serif;
+  font-family: var(--font-serif);
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Update the tribal pattern to use the new Gold variable */
+.font-display { font-family: var(--font-display); letter-spacing: 0.1em; }
+
+/* Tribal pattern watermark */
 .tribal-bg {
   background-image: 
-    repeating-linear-gradient(
-      45deg,
-      transparent,
-      transparent 10px,
-      rgba(197, 157, 63, 0.05) 10px, /* Using --gold hex with low opacity */
-      rgba(197, 157, 63, 0.05) 11px
-    ),
-    repeating-linear-gradient(
-      -45deg,
-      transparent,
-      transparent 10px,
-      rgba(197, 157, 63, 0.05) 10px,
-      rgba(197, 157, 63, 0.05) 11px
-    );
+    repeating-linear-gradient(45deg, transparent, transparent 15px, rgba(197, 157, 63, 0.03) 15px, rgba(197, 157, 63, 0.03) 16px),
+    repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(197, 157, 63, 0.03) 15px, rgba(197, 157, 63, 0.03) 16px);
 }
 
-/* Rest of your existing animations and scrollbar code... */
+.btn-gold {
+  background-color: var(--gold);
+  color: white;
+  transition: all 0.3s ease;
+  padding: 1rem 2.5rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.btn-gold:hover {
+  background-color: var(--tan);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(186, 110, 60, 0.2);
+}
