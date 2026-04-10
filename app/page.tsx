@@ -5,135 +5,79 @@ import Image from "next/image";
 
 export default function HomePage() {
   return (
-    <main style={{ background: "#FAF3E8", overflowX: "hidden" }}>
+    <main className="min-h-screen overflow-x-hidden bg-[var(--cream)]">
+      
+      {/* ── HERO SECTION ── */}
+      <section className="relative min-h-screen flex items-center pt-20 overflow-hidden tribal-bg">
+        {/* Decorative Radial Gradient for Luxury Depth */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[var(--charcoal)] via-[var(--charcoal)] to-[var(--terracotta)] opacity-95" />
+        
+        {/* Subtle Gold Flare */}
+        <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-[var(--gold)] opacity-10 blur-[150px] rounded-full" />
 
-      {/* ── NAVIGATION ── */}
-      <nav style={{
-        position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-        padding: "20px 48px",
-        background: "rgba(250,243,232,0)",
-        transition: "background 0.4s ease",
-      }}>
-        <Link href="/" style={{ display: "flex", alignItems: "center", gap: "12px", textDecoration: "none" }}>
-          {/* Use string path for public files */}
-          <Image 
-            src="/logo.png" 
-            alt="Origin 54" 
-            width={48} 
-            height={48} 
-            style={{ borderRadius: "50%" }}
-            priority
-          />
-          <div>
-            <div style={{ fontFamily: "var(--font-bebas)", fontSize: "20px", letterSpacing: "0.1em", color: "#2C3E50", lineHeight: 1 }}>ORIGIN 54</div>
-            <div style={{ fontFamily: "var(--font-cormorant)", fontSize: "10px", color: "#C8922A", letterSpacing: "0.15em", fontStyle: "italic" }}>The Asili Collective</div>
-          </div>
-        </Link>
-        <div style={{ display: "flex", gap: "36px", alignItems: "center" }}>
-          {["Shop", "Artisans", "About"].map((item) => (
-            <Link key={item} href={`/${item.toLowerCase()}`} style={{
-              fontFamily: "var(--font-cormorant)", fontSize: "17px", fontWeight: 500,
-              color: "#2C3E50", textDecoration: "none", letterSpacing: "0.05em",
-            }}>{item}</Link>
-          ))}
-          <Link href="/shop" style={{
-            fontFamily: "var(--font-bebas)", fontSize: "14px", letterSpacing: "0.15em",
-            background: "#C8922A", color: "#FAF3E8", padding: "10px 24px",
-            textDecoration: "none", borderRadius: "2px",
-          }}>SHOP NOW</Link>
-        </div>
-      </nav>
-
-      {/* ── HERO ── */}
-      <section style={{
-        minHeight: "100vh", position: "relative",
-        display: "flex", alignItems: "center",
-        background: "linear-gradient(135deg, #2C3E50 0%, #1a2535 60%, #B85C2C 100%)",
-        overflow: "hidden",
-      }}>
-        <div style={{
-          position: "absolute", inset: 0, opacity: 0.06,
-          backgroundImage: `repeating-linear-gradient(45deg, #C8922A 0, #C8922A 1px, transparent 0, transparent 50%),
-            repeating-linear-gradient(-45deg, #C8922A 0, #C8922A 1px, transparent 0, transparent 50%)`,
-          backgroundSize: "30px 30px",
-        }} />
-
-        <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 48px", position: "relative", zIndex: 2 }}>
-          <div style={{ maxWidth: "680px" }}>
-            <div style={{ display: "inline-flex", alignItems: "center", gap: "12px", marginBottom: "32px" }}>
-              <div style={{ width: "40px", height: "1px", background: "#C8922A" }} />
-              <span style={{ fontFamily: "var(--font-cormorant)", fontSize: "13px", letterSpacing: "0.25em", color: "#C8922A", textTransform: "uppercase" }}>The Asili Collective</span>
+        <div className="container mx-auto px-6 md:px-12 relative z-10">
+          <div className="max-w-4xl">
+            {/* Branding Tagline */}
+            <div className="flex items-center gap-4 mb-8 animate-fade-in">
+              <div className="w-12 h-[1px] bg-[var(--gold)]" />
+              <span className="font-serif text-[var(--gold)] tracking-[0.3em] text-xs uppercase font-semibold">
+                The Asili Collective
+              </span>
             </div>
 
-            <h1 style={{
-              fontFamily: "var(--font-bebas)", fontSize: "clamp(72px, 10vw, 140px)",
-              lineHeight: 0.9, letterSpacing: "0.04em", color: "#FAF3E8",
-              marginBottom: "32px",
-            }}>
+            {/* Main Heading */}
+            <h1 className="font-display text-7xl md:text-[140px] leading-[0.85] text-[var(--cream)] mb-8 tracking-tight">
               BORN<br />
-              <span style={{ color: "#C8922A" }}>FROM</span><br />
+              <span className="text-[var(--gold)]">FROM</span><br />
               AFRICA
             </h1>
 
-            <p style={{
-              fontFamily: "var(--font-cormorant)", fontSize: "22px", fontWeight: 300,
-              color: "rgba(250,243,232,0.75)", lineHeight: 1.7, marginBottom: "48px",
-              maxWidth: "480px", fontStyle: "italic",
-            }}>
-              Luxury fashion rooted in the heritage, craft, and bold spirit of Africa's 54 nations.
+            {/* Description */}
+            <p className="font-serif text-xl md:text-2xl text-[var(--cream)]/70 italic max-w-lg mb-12 leading-relaxed">
+              "Luxury fashion rooted in the heritage, craft, and bold spirit of Africa’s 54 nations."
             </p>
 
-            <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
-              <Link href="/shop" style={{
-                fontFamily: "var(--font-bebas)", fontSize: "16px", letterSpacing: "0.18em",
-                background: "#C8922A", color: "#FAF3E8",
-                padding: "16px 40px", textDecoration: "none",
-                display: "inline-block", transition: "background 0.2s ease",
-              }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = "#B85C2C")}
-                onMouseLeave={(e) => (e.currentTarget.style.background = "#C8922A")}
-              >
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-6">
+              <Link href="/shop" className="btn-gold text-center text-sm tracking-[0.2em] font-display py-5 px-10">
                 EXPLORE COLLECTION
               </Link>
-              <Link href="/about" style={{
-                fontFamily: "var(--font-bebas)", fontSize: "16px", letterSpacing: "0.18em",
-                background: "transparent", color: "#FAF3E8",
-                padding: "16px 40px", textDecoration: "none",
-                display: "inline-block",
-                border: "1px solid rgba(250,243,232,0.4)",
-                transition: "border-color 0.2s ease",
-              }}>
+              <Link href="/about" className="border border-[var(--cream)]/30 text-[var(--cream)] hover:border-[var(--gold)] hover:text-[var(--gold)] transition-all py-5 px-10 text-center font-display tracking-[0.2em] text-sm">
                 OUR STORY
               </Link>
             </div>
           </div>
         </div>
+
+        {/* Vertical Scroll Indicator */}
+        <div className="absolute bottom-10 left-12 hidden md:block">
+          <div className="w-[1px] h-24 bg-gradient-to-b from-[var(--gold)] to-transparent opacity-50" />
+        </div>
       </section>
 
       {/* ── FEATURED CATEGORIES ── */}
-      <section style={{ padding: "100px 48px", maxWidth: "1280px", margin: "0 auto" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "24px" }}>
+      <section className="py-24 px-6 md:px-12 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
-            { title: "WOMEN", sub: "Luxury Womenswear", color: "#B85C2C", accent: "#FAF3E8" },
-            { title: "MEN", sub: "Elevated Menswear", color: "#2C3E50", accent: "#C8922A" },
-            { title: "ACCESSORIES", sub: "Artisan Accessories", color: "#C8922A", accent: "#FAF3E8" },
+            { title: "WOMEN", sub: "Luxury Womenswear", color: "var(--terracotta)", accent: "var(--cream)" },
+            { title: "MEN", sub: "Elevated Menswear", color: "var(--charcoal)", accent: "var(--gold)" },
+            { title: "ACCESSORIES", sub: "Artisan Craft", color: "var(--gold)", accent: "var(--cream)" },
           ].map((cat) => (
-            <Link key={cat.title} href="/shop" style={{ textDecoration: "none" }}>
-              <div style={{
-                background: cat.color, padding: "64px 32px",
-                position: "relative", overflow: "hidden",
-                cursor: "pointer", transition: "transform 0.3s ease",
-                aspectRatio: "3/4", display: "flex", flexDirection: "column",
-                justifyContent: "flex-end",
-              }}
-                onMouseEnter={(e) => (e.currentTarget.style.transform = "translateY(-4px)")}
-                onMouseLeave={(e) => (e.currentTarget.style.transform = "translateY(0)")}
-              >
-                <div style={{ position: "relative", zIndex: 2 }}>
-                  <div style={{ fontFamily: "var(--font-bebas)", fontSize: "56px", letterSpacing: "0.08em", color: cat.accent, lineHeight: 1 }}>{cat.title}</div>
-                  <div style={{ fontFamily: "var(--font-cormorant)", fontSize: "16px", color: `${cat.accent}cc`, fontStyle: "italic", marginTop: "8px" }}>{cat.sub}</div>
-                </div>
+            <Link key={cat.title} href="/shop" className="group relative aspect-[3/4] overflow-hidden">
+              <div 
+                style={{ backgroundColor: cat.color }} 
+                className="absolute inset-0 transition-transform duration-700 group-hover:scale-105" 
+              />
+              {/* Subtle pattern overlay for the cards */}
+              <div className="absolute inset-0 opacity-10 tribal-bg" />
+              
+              <div className="absolute inset-0 p-8 flex flex-col justify-end z-20">
+                <h2 className="font-display text-5xl md:text-6xl leading-none transition-colors" style={{ color: cat.accent }}>
+                  {cat.title}
+                </h2>
+                <p className="font-serif italic text-lg opacity-80 mt-2" style={{ color: cat.accent }}>
+                  {cat.sub}
+                </p>
               </div>
             </Link>
           ))}
@@ -141,53 +85,40 @@ export default function HomePage() {
       </section>
 
       {/* ── ARTISANS CTA ── */}
-      <section style={{
-        background: "#2C3E50", padding: "100px 48px",
-        position: "relative", overflow: "hidden",
-      }}>
-        <div style={{ maxWidth: "800px", margin: "0 auto", textAlign: "center", position: "relative", zIndex: 2 }}>
-          <h2 style={{ fontFamily: "var(--font-bebas)", fontSize: "clamp(48px, 7vw, 90px)", letterSpacing: "0.05em", color: "#FAF3E8", lineHeight: 0.95, marginBottom: "32px" }}>
-            MEET OUR<br /><span style={{ color: "#C8922A" }}>ARTISANS</span>
+      <section className="bg-[var(--charcoal)] py-32 px-6 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-5 tribal-bg" />
+        <div className="max-w-4xl mx-auto text-center relative z-10">
+          <h2 className="font-display text-6xl md:text-8xl text-[var(--cream)] mb-8 leading-none">
+            MEET OUR <span className="text-[var(--gold)]">ARTISANS</span>
           </h2>
-          <Link href="/artisans" style={{
-            fontFamily: "var(--font-bebas)", fontSize: "16px", letterSpacing: "0.2em",
-            border: "1px solid #C8922A", color: "#C8922A",
-            padding: "16px 48px", textDecoration: "none", display: "inline-block",
-            transition: "all 0.25s ease",
-          }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = "#C8922A"; e.currentTarget.style.color = "#FAF3E8"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#C8922A"; }}
-          >
+          <p className="font-serif text-[var(--cream)]/60 text-xl mb-12 max-w-2xl mx-auto italic">
+            Go behind the scenes and discover the master crafters preserving centuries-old African techniques.
+          </p>
+          <Link href="/artisans" className="inline-block border border-[var(--gold)] text-[var(--gold)] hover:bg-[var(--gold)] hover:text-white transition-all px-12 py-4 font-display tracking-widest text-sm">
             DISCOVER THEIR STORIES
           </Link>
         </div>
       </section>
 
       {/* ── NEWSLETTER ── */}
-      <section style={{ padding: "100px 48px", background: "#FAF3E8" }}>
-        <div style={{ maxWidth: "560px", margin: "0 auto", textAlign: "center" }}>
-          <h2 style={{ fontFamily: "var(--font-bebas)", fontSize: "clamp(36px, 5vw, 60px)", letterSpacing: "0.06em", color: "#2C3E50", marginBottom: "16px" }}>
+      <section className="py-24 px-6 bg-[var(--cream)]">
+        <div className="max-w-2xl mx-auto text-center">
+          <h3 className="font-display text-4xl text-[var(--charcoal)] mb-4 tracking-wider">
             JOIN THE COLLECTIVE
-          </h2>
-          <div style={{ display: "flex", gap: "0", maxWidth: "440px", margin: "0 auto" }}>
-            <input type="email" placeholder="Your email address" style={{
-              flex: 1, padding: "14px 20px",
-              border: "1px solid rgba(44,62,80,0.2)", borderRight: "none",
-              background: "#fff", fontFamily: "var(--font-cormorant)", fontSize: "16px",
-              color: "#2C3E50", outline: "none",
-            }} />
-            <button style={{
-              background: "#2C3E50", color: "#FAF3E8", border: "none",
-              padding: "14px 24px", cursor: "pointer",
-              fontFamily: "var(--font-bebas)", fontSize: "14px", letterSpacing: "0.15em",
-              whiteSpace: "nowrap", transition: "background 0.2s ease",
-            }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = "#C8922A")}
-              onMouseLeave={(e) => (e.currentTarget.style.background = "#2C3E50")}
-            >
+          </h3>
+          <p className="font-serif italic text-[var(--charcoal)]/70 mb-8">
+            Be the first to know about new heritage drops and artisan stories.
+          </p>
+          <form className="flex flex-col sm:flex-row gap-0 border border-[var(--charcoal)]/10 shadow-sm">
+            <input 
+              type="email" 
+              placeholder="Your email address" 
+              className="flex-1 px-6 py-4 bg-white font-serif outline-none text-[var(--charcoal)]"
+            />
+            <button className="bg-[var(--charcoal)] text-[var(--cream)] px-10 py-4 font-display tracking-widest hover:bg-[var(--gold)] transition-colors">
               SUBSCRIBE
             </button>
-          </div>
+          </form>
         </div>
       </section>
     </main>
