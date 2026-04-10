@@ -10,9 +10,11 @@ const nextConfig = {
       },
     ],
   },
-  // This helps prevent build errors related to ESLint during the Vercel deployment
-  eslint: {
-    ignoreDuringBuilds: true,
+  // Experimental Turbopack settings if needed
+  experimental: {
+    turbo: {
+      // Config options here
+    },
   },
 };
 
