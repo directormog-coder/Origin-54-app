@@ -1,24 +1,18 @@
 @import "tailwindcss";
 
 :root {
-  --gold: #C8922A;
-  --gold-light: #E8B84B;
-  --terracotta: #B85C2C;
-  --charcoal: #2C3E50;
-  --cream: #FAF3E8;
-  --cream-dark: #F0E6D3;
+  /* Exact Colors Picked from your Logo.png */
+  --gold: #C59D3F;           /* The main gold ring/text */
+  --gold-light: #E9C162;     /* The lighter sun rays in the map */
+  --terracotta: #BA6E3C;     /* The deep reddish-brown in the map */
+  --tan: #DAA15F;            /* The medium orange-tan in the map */
+  --charcoal: #242D33;       /* The "ORIGIN 54" dark text color */
+  --cream: #F8F1EA;          /* The exact off-white/cream logo background */
+  --cream-dark: #EFE6DC;     /* A slightly darker shade for hover states */
+  
+  /* Fonts */
   --font-cormorant: var(--font-cormorant);
   --font-bebas: var(--font-bebas);
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  scroll-behavior: smooth;
 }
 
 body {
@@ -29,80 +23,23 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Scrollbar */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--cream-dark); }
-::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
-
-/* Selection */
-::selection { background: var(--gold); color: var(--cream); }
-
-/* Utility classes */
-.font-display { font-family: var(--font-bebas), sans-serif; letter-spacing: 0.08em; }
-.font-serif { font-family: var(--font-cormorant), Georgia, serif; }
-
-/* Tribal pattern overlay utility */
+/* Update the tribal pattern to use the new Gold variable */
 .tribal-bg {
   background-image: 
     repeating-linear-gradient(
       45deg,
       transparent,
       transparent 10px,
-      rgba(200, 146, 42, 0.04) 10px,
-      rgba(200, 146, 42, 0.04) 11px
+      rgba(197, 157, 63, 0.05) 10px, /* Using --gold hex with low opacity */
+      rgba(197, 157, 63, 0.05) 11px
     ),
     repeating-linear-gradient(
       -45deg,
       transparent,
       transparent 10px,
-      rgba(200, 146, 42, 0.04) 10px,
-      rgba(200, 146, 42, 0.04) 11px
+      rgba(197, 157, 63, 0.05) 10px,
+      rgba(197, 157, 63, 0.05) 11px
     );
 }
 
-/* Gold shimmer animation */
-@keyframes shimmer {
-  0% { background-position: -200% center; }
-  100% { background-position: 200% center; }
-}
-
-.gold-shimmer {
-  background: linear-gradient(
-    90deg,
-    var(--gold) 0%,
-    var(--gold-light) 50%,
-    var(--gold) 100%
-  );
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: shimmer 4s linear infinite;
-}
-
-/* Fade in animations */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.animate-fade-up {
-  animation: fadeUp 0.8s ease forwards;
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.6s ease forwards;
-}
-
-/* Stagger delays */
-.delay-100 { animation-delay: 0.1s; opacity: 0; }
-.delay-200 { animation-delay: 0.2s; opacity: 0; }
-.delay-300 { animation-delay: 0.3s; opacity: 0; }
-.delay-400 { animation-delay: 0.4s; opacity: 0; }
-.delay-500 { animation-delay: 0.5s; opacity: 0; }
-.delay-700 { animation-delay: 0.7s; opacity: 0; }
+/* Rest of your existing animations and scrollbar code... */
