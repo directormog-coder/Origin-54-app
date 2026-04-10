@@ -5,16 +5,8 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: '**.supabase.co',
-        port: '',
-        pathname: '/storage/v1/object/public/**',
       },
     ],
-  },
-  // Experimental Turbopack settings if needed
-  experimental: {
-    turbo: {
-      // Config options here
-    },
   },
 };
 
