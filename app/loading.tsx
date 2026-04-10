@@ -1,38 +1,24 @@
 export default function Loading() {
   return (
-    <div style={{
-      minHeight: "100vh",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      gap: "24px",
-      background: "#FAF3E8",
-    }}>
-      {/* Animated gold ring */}
-      <div style={{
-        width: "56px",
-        height: "56px",
-        borderRadius: "50%",
-        border: "2px solid rgba(200,146,42,0.2)",
-        borderTopColor: "#C8922A",
-        animation: "spin 0.9s linear infinite",
-      }} />
-
-      <div style={{
-        fontFamily: "var(--font-bebas)",
-        fontSize: "13px",
-        letterSpacing: "0.3em",
-        color: "#C8922A",
-      }}>
-        LOADING
+    <div className="min-h-screen flex flex-col items-center justify-center gap-6 bg-[var(--cream)] tribal-bg">
+      {/* The Animated Gold Ring */}
+      <div className="relative">
+        <div className="w-16 h-16 rounded-full border-2 border-[var(--gold)]/10 border-t-[var(--gold)] animate-spin" />
+        {/* Optional: A tiny dot in the middle for more luxury feel */}
+        <div className="absolute inset-0 m-auto w-1 h-1 bg-[var(--gold)] rounded-full" />
       </div>
 
-      <style>{`
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-      `}</style>
+      {/* Branded Loading Text */}
+      <div className="flex flex-col items-center gap-2">
+        <span className="font-display text-sm tracking-[0.4em] text-[var(--gold)] uppercase animate-pulse">
+          Origin 54
+        </span>
+        <span className="font-serif italic text-[10px] text-[var(--charcoal)]/40 tracking-widest uppercase">
+          The Asili Collective
+        </span>
+      </div>
+
+      {/* We use standard Tailwind 'animate-spin', so we don't need the <style> tag anymore! */}
     </div>
-  )
+  );
 }
