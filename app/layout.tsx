@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Bebas_Neue } from "next/font/google";
 import "./globals.css";
+import Navbar from "@/components/Navbar"; // Make sure you created this file!
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -19,7 +20,7 @@ const bebas = Bebas_Neue({
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#C8922A",
+  themeColor: "#C59D3F", // Updated to your logo's gold
 };
 
 export const metadata: Metadata = {
@@ -69,10 +70,16 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body 
-        className="bg-[#FAF3E8] text-[#2C3E50] antialiased"
+        className="bg-[var(--cream)] text-[var(--charcoal)] antialiased"
         suppressHydrationWarning
       >
-        {children}
+        {/* The Navbar is now global and will show on every page */}
+        <Navbar /> 
+        
+        {/* The main tag ensures content doesn't get hidden behind the fixed Navbar */}
+        <main>
+          {children}
+        </main>
       </body>
     </html>
   );
