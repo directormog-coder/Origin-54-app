@@ -1,82 +1,46 @@
+import { createClient } from "@/utils/supabase/server";
 import Image from "next/image";
 import Link from "next/link";
-import { createClient } from "@/utils/supabase/server"; // Adjust path based on your supabase setup
 
-export default async function ShopPage() {
-  // 1. Connect to Supabase
+export default async function ShopPage({ searchParams }: { searchParams: { category?: string } }) {
   const supabase = await createClient();
-  
-  // 2. Fetch products
-  const { data: products, error } = await supabase
-    .from("products")
-    .select("*")
-    .order("created_at", { ascending: false });
+  const category = searchParams.category;
 
-  if (error) {
-    console.error("Error fetching products:", error);
-  }
+  let query = supabase.from("products").select("*");
+  if (category) query = query.eq("category", category);
+  
+  const { data: products } = await query.order("created_at", { ascending: false });
 
   return (
-    <main className="min-h-screen bg-[var(--cream)] pt-32 pb-20 px-6 md:px-12">
-      {/* Header Section */}
-      <header className="max-w-7xl mx-auto mb-16 text-center">
-        <h1 className="font-display text-5xl md:text-7xl text-[var(--charcoal)] mb-4">
-          THE <span className="text-[var(--gold)]">COLLECTION</span>
-        </h1>
-        <p className="font-serif italic text-lg text-[var(--charcoal)]/60">
-          Handcrafted luxury pieces from across the continent.
-        </p>
+    <main className="min-h-screen bg-[var(--cream)] pt-32 pb-20 px-6">
+      <header className="max-w-7xl mx-auto text-center mb-12">
+        <h1 className="font-display text-6xl text-[var(--charcoal)] uppercase mb-6">Store</h1>
+        
+        {/* Filters */}
+        <div className="flex justify-center gap-6 text-[10px] font-bold tracking-widest uppercase text-[var(--charcoal)]/60">
+          <Link href="/shop" className={`${!category ? 'text-[var(--gold)] border-b border-[var(--gold)]' : ''} pb-1`}>All</Link>
+          <Link href="/shop?category=Women" className={`${category === 'Women' ? 'text-[var(--gold)] border-b border-[var(--gold)]' : ''} pb-1`}>Women</Link>
+          <Link href="/shop?category=Men" className={`${category === 'Men' ? 'text-[var(--gold)] border-b border-[var(--gold)]' : ''} pb-1`}>Men</Link>
+          <Link href="/shop?category=Accessories" className={`${category === 'Accessories' ? 'text-[var(--gold)] border-b border-[var(--gold)]' : ''} pb-1`}>Accessories</Link>
+        </div>
       </header>
 
-      {/* Product Grid */}
-      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
         {products?.map((product) => (
-          <Link 
-            key={product.id} 
-            href={`/shop/${product.id}`} 
-            className="group block"
-          >
-            {/* Image Container */}
-            <div className="relative aspect-[3/4] overflow-hidden bg-[var(--cream-dark)] mb-6 shadow-sm">
-              <Image
-                src={product.image_url || "/placeholder-product.jpg"}
-                alt={product.name}
-                fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              {/* Subtle hover overlay */}
-              <div className="absolute inset-0 bg-[var(--charcoal)]/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+          <Link key={product.id} href={`/shop/${product.id}`} className="group">
+            <div className="relative aspect-[3/4] bg-[var(--cream-dark)] overflow-hidden mb-4 shadow-sm">
+              <Image src={product.image_url} alt={product.name} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
             </div>
-
-            {/* Product Info */}
-            <div className="flex justify-between items-start">
+            <div className="flex justify-between">
               <div>
-                <h3 className="font-display text-xl tracking-wider text-[var(--charcoal)] group-hover:text-[var(--gold)] transition-colors">
-                  {product.name}
-                </h3>
-                <p className="font-serif italic text-[var(--charcoal)]/60 text-sm">
-                  {product.category}
-                </p>
+                <h3 className="font-display text-xl text-[var(--charcoal)]">{product.name}</h3>
+                <p className="font-serif italic text-xs opacity-50">{product.category}</p>
               </div>
-              <span className="font-serif font-medium text-[var(--charcoal)]">
-                ${product.price}
-              </span>
+              <span className="font-serif text-[var(--charcoal)]">${product.price}</span>
             </div>
-            
-            <div className="mt-4 w-full h-[1px] bg-[var(--gold)]/20 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500" />
           </Link>
         ))}
       </div>
-
-      {/* Empty State (if no products yet) */}
-      {(!products || products.length === 0) && (
-        <div className="text-center py-20 border border-dashed border-[var(--gold)]/30 rounded-lg">
-          <p className="font-serif italic text-[var(--charcoal)]/40">
-            Our latest collection is currently being curated. Check back soon.
-          </p>
-        </div>
-      )}
     </main>
   );
 }
-
