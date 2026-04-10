@@ -1,7 +1,6 @@
 @import "tailwindcss";
 
 :root {
-  /* Exact Colors from your Logo */
   --gold: #C59D3F;
   --gold-light: #E9C162;
   --terracotta: #BA6E3C;
@@ -23,7 +22,6 @@ body {
 
 .font-display { font-family: var(--font-display); letter-spacing: 0.1em; }
 
-/* Tribal pattern watermark */
 .tribal-bg {
   background-image: 
     repeating-linear-gradient(45deg, transparent, transparent 15px, rgba(197, 157, 63, 0.03) 15px, rgba(197, 157, 63, 0.03) 16px),
@@ -37,10 +35,12 @@ body {
   padding: 1rem 2.5rem;
   font-weight: 600;
   letter-spacing: 0.05em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-gold:hover {
   background-color: var(--tan);
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(186, 110, 60, 0.2);
 }
