@@ -1,25 +1,20 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-gold: #C59D3F;
+  --color-cream: #F8F1EA;
+  --color-charcoal: #1A1A1A;
+  --font-serif: var(--font-serif);
+  --font-display: var(--font-display);
+}
 
 :root {
   --cream: #F8F1EA;
-  --cream-dark: #F2E8DA;
   --gold: #C59D3F;
-  --tan: #A6864B;
   --charcoal: #1A1A1A;
-  --font-serif: var(--font-serif);
-  --font-display: var(--font-display);
 }
 
 body {
   background-color: var(--cream);
   color: var(--charcoal);
-  font-family: var(--font-serif);
-}
-
-/* Custom Utility for Origin 54 Buttons */
-.btn-gold {
-  @apply bg-[var(--gold)] text-white px-8 py-4 font-display tracking-widest 
-  uppercase transition-all duration-300 hover:bg-[var(--tan)] disabled:opacity-50;
 }
