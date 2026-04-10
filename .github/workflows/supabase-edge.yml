@@ -1,0 +1,23 @@
+name: Supabase Drift Check
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Verify Generated Types
+        run: |
+          supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_ID }}
+          supabase db pull
+          
