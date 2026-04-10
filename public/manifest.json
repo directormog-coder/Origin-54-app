@@ -4,8 +4,8 @@
   "description": "African luxury fashion rooted in heritage",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#FAF3E8",
-  "theme_color": "#C8922A",
+  "background_color": "#F8F1EA",
+  "theme_color": "#C59D3F",
   "orientation": "portrait",
   "scope": "/",
   "icons": [
