@@ -1,14 +1,19 @@
 -- ============================================
--- Origin 54 Database Schema
+-- Origin 54 Database Schema (Clean Version)
 -- ============================================
 
--- Enable Row Level Security (RLS)
-ALTER DATABASE postgres SET "app.jwt_secret" TO 'your-jwt-secret';
+-- ============================================
+-- STEP 1: DROP EXISTING TABLES (CLEAN START)
+-- ============================================
+DROP TABLE IF EXISTS orders CASCADE;
+DROP TABLE IF EXISTS products CASCADE;
+DROP TABLE IF EXISTS artisans CASCADE;
+DROP FUNCTION IF EXISTS update_updated_at_column() CASCADE;
 
 -- ============================================
--- ARTISANS TABLE
+-- STEP 2: CREATE ARTISANS TABLE
 -- ============================================
-CREATE TABLE IF NOT EXISTS artisans (
+CREATE TABLE artisans (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     name TEXT NOT NULL,
     bio TEXT,
@@ -18,10 +23,8 @@ CREATE TABLE IF NOT EXISTS artisans (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
 
--- Enable RLS
 ALTER TABLE artisans ENABLE ROW LEVEL SECURITY;
 
--- Policies
 CREATE POLICY "Artisans are viewable by everyone" 
     ON artisans FOR SELECT 
     USING (true);
@@ -35,9 +38,9 @@ CREATE POLICY "Only authenticated users can update artisans"
     USING (auth.role() = 'authenticated');
 
 -- ============================================
--- PRODUCTS TABLE
+-- STEP 3: CREATE PRODUCTS TABLE
 -- ============================================
-CREATE TABLE IF NOT EXISTS products (
+CREATE TABLE products (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     name TEXT NOT NULL,
     description TEXT,
@@ -51,10 +54,8 @@ CREATE TABLE IF NOT EXISTS products (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
 
--- Enable RLS
 ALTER TABLE products ENABLE ROW LEVEL SECURITY;
 
--- Policies
 CREATE POLICY "Products are viewable by everyone" 
     ON products FOR SELECT 
     USING (true);
@@ -72,9 +73,9 @@ CREATE POLICY "Only authenticated users can delete products"
     USING (auth.role() = 'authenticated');
 
 -- ============================================
--- ORDERS TABLE
+-- STEP 4: CREATE ORDERS TABLE
 -- ============================================
-CREATE TABLE IF NOT EXISTS orders (
+CREATE TABLE orders (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     email TEXT NOT NULL,
     amount DECIMAL(10, 2) NOT NULL,
@@ -86,10 +87,8 @@ CREATE TABLE IF NOT EXISTS orders (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
 
--- Enable RLS
 ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
 
--- Policies
 CREATE POLICY "Users can view their own orders" 
     ON orders FOR SELECT 
     USING (auth.uid()::text = customer_details->>'user_id' OR auth.role() = 'authenticated');
@@ -99,10 +98,8 @@ CREATE POLICY "Only authenticated users can insert orders"
     WITH CHECK (auth.role() = 'authenticated');
 
 -- ============================================
--- FUNCTIONS & TRIGGERS
+-- STEP 5: CREATE FUNCTION & TRIGGERS
 -- ============================================
-
--- Auto-update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -111,7 +108,6 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
--- Triggers for updated_at
 CREATE TRIGGER update_artisans_updated_at BEFORE UPDATE ON artisans 
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
@@ -122,7 +118,7 @@ CREATE TRIGGER update_orders_updated_at BEFORE UPDATE ON orders
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- ============================================
--- INDEXES
+-- STEP 6: CREATE INDEXES
 -- ============================================
 CREATE INDEX idx_products_category ON products(category);
 CREATE INDEX idx_products_artisan_id ON products(artisan_id);
@@ -130,10 +126,3 @@ CREATE INDEX idx_products_is_featured ON products(is_featured);
 CREATE INDEX idx_orders_email ON orders(email);
 CREATE INDEX idx_orders_status ON orders(status);
 CREATE INDEX idx_orders_created_at ON orders(created_at DESC);
-
--- ============================================
--- STORAGE BUCKET SETUP (Run in Supabase Dashboard SQL Editor)
--- ============================================
--- Note: Create buckets manually in Supabase Dashboard or use Storage API
--- Required buckets: 'products', 'artisans', 'logos'
-
