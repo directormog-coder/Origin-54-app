@@ -2,15 +2,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useCartStore } from "@/store/cartStore";
-
-export const metadata = {
-  title: "Shopping Cart | Origin 54",
-  description: "Review your selected items from the Asili Collective.",
-};
+import { useCart } from "@/lib/hooks/useCart";
+import { formatPrice } from "@/lib/utils";
 
 export default function CartPage() {
-  const { items, removeItem, updateQuantity, total, clearCart } = useCartStore();
+  const { items, removeItem, updateQuantity, total, itemCount, clearCart } = useCart();
 
   if (items.length === 0) {
     return (
@@ -36,9 +32,12 @@ export default function CartPage() {
   return (
     <main className="min-h-screen bg-[var(--cream)] pt-32 pb-20 px-6">
       <div className="max-w-7xl mx-auto">
-        <h1 className="font-display text-5xl md:text-7xl text-[var(--charcoal)] uppercase mb-16 text-center">
+        <h1 className="font-display text-5xl md:text-7xl text-[var(--charcoal)] uppercase mb-4 text-center">
           Your Cart
         </h1>
+        <p className="font-serif text-center text-[var(--charcoal)]/60 mb-16">
+          {itemCount} {itemCount === 1 ? "item" : "items"}
+        </p>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Cart Items */}
@@ -48,7 +47,7 @@ export default function CartPage() {
                 key={item.id} 
                 className="flex gap-6 p-6 bg-[var(--cream-dark)] border border-[var(--gold)]/10"
               >
-                <div className="relative w-32 h-40 flex-shrink-0 bg-[var(--charcoal)]/5">
+                <div className="relative w-32 h-40 flex-shrink-0 bg-[var(--charcoal)]/5 overflow-hidden">
                   <Image
                     src={item.image_url}
                     alt={item.name}
@@ -66,25 +65,32 @@ export default function CartPage() {
                     <h3 className="font-display text-xl text-[var(--charcoal)] uppercase mb-2">
                       {item.name}
                     </h3>
-                    <p className="font-serif text-[var(--charcoal)]/60 text-sm">
-                      ${item.price}
+                    {item.artisan_name && (
+                      <p className="font-serif text-[var(--charcoal)]/50 text-sm italic mb-2">
+                        by {item.artisan_name}
+                      </p>
+                    )}
+                    <p className="font-serif text-[var(--charcoal)]/80">
+                      {formatPrice(item.price)}
                     </p>
                   </div>
 
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between mt-4">
                     <div className="flex items-center gap-4">
                       <button
-                        onClick={() => updateQuantity(item.id, Math.max(0, item.quantity - 1))}
-                        className="w-8 h-8 border border-[var(--gold)]/30 flex items-center justify-center text-[var(--charcoal)] hover:bg-[var(--gold)] hover:text-white transition-colors"
+                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                        className="w-8 h-8 border border-[var(--gold)]/30 flex items-center justify-center text-[var(--charcoal)] hover:bg-[var(--gold)] hover:text-white transition-colors font-display"
+                        aria-label="Decrease quantity"
                       >
-                        -
+                        −
                       </button>
                       <span className="font-display text-lg w-8 text-center">
                         {item.quantity}
                       </span>
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        className="w-8 h-8 border border-[var(--gold)]/30 flex items-center justify-center text-[var(--charcoal)] hover:bg-[var(--gold)] hover:text-white transition-colors"
+                        className="w-8 h-8 border border-[var(--gold)]/30 flex items-center justify-center text-[var(--charcoal)] hover:bg-[var(--gold)] hover:text-white transition-colors font-display"
+                        aria-label="Increase quantity"
                       >
                         +
                       </button>
@@ -92,7 +98,7 @@ export default function CartPage() {
                     
                     <button
                       onClick={() => removeItem(item.id)}
-                      className="font-serif text-sm text-[var(--charcoal)]/40 hover:text-[var(--charcoal)] underline"
+                      className="font-serif text-sm text-[var(--charcoal)]/40 hover:text-[var(--charcoal)] underline transition-colors"
                     >
                       Remove
                     </button>
@@ -103,7 +109,7 @@ export default function CartPage() {
 
             <button
               onClick={clearCart}
-              className="font-serif text-sm text-[var(--charcoal)]/40 hover:text-[var(--charcoal)] underline"
+              className="font-serif text-sm text-[var(--charcoal)]/40 hover:text-[var(--charcoal)] underline transition-colors"
             >
               Clear Cart
             </button>
@@ -119,16 +125,16 @@ export default function CartPage() {
               <div className="space-y-4 mb-8 font-serif">
                 <div className="flex justify-between">
                   <span className="text-[var(--cream)]/70">Subtotal</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span>{formatPrice(total)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-[var(--cream)]/70">Shipping</span>
-                  <span>Calculated at checkout</span>
+                  <span className="font-serif italic">Calculated at checkout</span>
                 </div>
                 <div className="h-[1px] bg-[var(--gold)]/30 my-4" />
                 <div className="flex justify-between font-display text-xl">
                   <span>Total</span>
-                  <span className="text-[var(--gold)]">${total.toFixed(2)}</span>
+                  <span className="text-[var(--gold)]">{formatPrice(total)}</span>
                 </div>
               </div>
 
