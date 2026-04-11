@@ -3,12 +3,20 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import AddToCartButton from "@/components/AddToCartButton";
 
-export default async function ProductPage({ params }: { params: { id: string } }) {
+// Next.js 15: params is now async/Promise-based
+export default async function ProductPage({ 
+  params 
+}: { 
+  params: Promise<{ id: string }> 
+}) {
+  // Await the params Promise
+  const { id } = await params;
+  
   const supabase = await createClient();
   const { data: product } = await supabase
     .from("products")
     .select("*, artisans(*)")
-    .eq("id", params.id)
+    .eq("id", id)
     .single();
 
   if (!product) notFound();
@@ -23,6 +31,8 @@ export default async function ProductPage({ params }: { params: { id: string } }
             alt={product.name} 
             fill 
             className="object-cover"
+            sizes="(max-width: 768px) 100vw, 50vw"
+            priority
           />
         </div>
 
