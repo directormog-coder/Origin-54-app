@@ -10,7 +10,7 @@ export default function ShopPage() {
   const [activeCategory, setActiveCategory] = useState<string>('ALL'); // Handle 'All' view
 
   // Categories MUST match the SQL precisely (capitalization matters!)
-  const categories = ['ALL', 'WOMAN', 'MAN', 'CHILDREN', 'ACCESSORIES'];
+  const categories = ['ALL', 'Woman', 'Man', 'CHILDREN', 'ACCESSORIES'];
   const supabase = createClient();
 
   // Fetch all products once on load
