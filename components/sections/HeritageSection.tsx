@@ -1,17 +1,36 @@
+import Image from "next/image";
+import Link from "next/link";
+
 export default function HeritageSection() {
   return (
-    <section className="py-24 bg-[var(--cream)] relative overflow-hidden tribal-bg">
-      <div className="max-w-4xl mx-auto px-6 text-center space-y-8">
-        <p className="text-[var(--gold)] font-display tracking-[0.4em] text-xs uppercase">The Philosophy</p>
-        <h2 className="text-5xl md:text-7xl font-display text-[var(--charcoal)] uppercase leading-tight">
-          Modern Design. <br />
-          <span className="text-[var(--gold)]">Ancient Wisdom.</span>
-        </h2>
-        <div className="w-16 h-[1px] bg-[var(--gold)] mx-auto" />
-        <p className="font-serif text-xl md:text-2xl text-[var(--charcoal)]/80 italic leading-relaxed">
-          "Asili Collective is a return to the source. We believe luxury isn't just about price, 
-          but the time, prayer, and history woven into every thread."
-        </p>
+    <section className="py-32 bg-[var(--cream-dark)] relative overflow-hidden">
+      <div className="absolute inset-0 tribal-bg opacity-[0.03]" />
+      <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
+        <div className="space-y-8">
+          <h2 className="text-6xl md:text-8xl font-display text-[var(--charcoal)] uppercase leading-none">
+            Meet the <br/> 
+            <span className="text-[var(--gold)]">Makers</span>
+          </h2>
+          <p className="font-serif text-xl text-[var(--charcoal)]/70 italic max-w-md">
+            &ldquo;Every stitch preserves a story, every pattern honors a nation.&rdquo;
+          </p>
+          <Link 
+            href="/artisans" 
+            className="inline-block border-b-2 border-[var(--gold)] pb-2 font-display tracking-widest text-sm hover:text-[var(--gold)] transition-colors"
+          >
+            VIEW ALL ARTISANS
+          </Link>
+        </div>
+        <div className="relative aspect-square bg-[var(--charcoal)] flex items-center justify-center overflow-hidden shadow-2xl">
+           <Image 
+             src="/logo.png" 
+             alt="Asili Heritage" 
+             width={250} 
+             height={250} 
+             className="opacity-20 grayscale brightness-200" 
+             sizes="250px"
+           />
+        </div>
       </div>
     </section>
   );
