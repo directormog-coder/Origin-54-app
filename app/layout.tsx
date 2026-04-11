@@ -44,7 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       suppressHydrationWarning 
       className={`${cormorant.variable} ${bebas.variable}`}
     >
-      <body className="antialiased min-h-screen flex flex-col bg-[var(--cream)] selection:bg-[var(--gold)] selection:text-white">
+      <body suppressHydrationWarning className="antialiased min-h-screen flex flex-col bg-[var(--cream)] selection:bg-[var(--gold)] selection:text-white">
         <Navbar />
         {/* 'flex-grow' ensures the footer stays at the bottom on short pages */}
         <main className="flex-grow">

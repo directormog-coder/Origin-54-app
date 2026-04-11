@@ -5,5 +5,3 @@
 
 // NOTE: This file should not be edited
 // see https://nextjs.org/docs/app/api-reference/config/typescript for more information.
-
-// Deep Repair Sync: 2026-04-11 17:28:30
