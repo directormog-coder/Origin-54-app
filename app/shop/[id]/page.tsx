@@ -1,7 +1,7 @@
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/lib/supabase/server"; // Corrected path
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import AddToCartButton from "@/components/AddToCartButton";
+import AddToCartButton from "@/components/cart/AddToCartButton"; // Updated to the new subfolder
 
 // Next.js 15: params is now async/Promise-based
 export default async function ProductPage({ 
@@ -51,7 +51,7 @@ export default async function ProductPage({
             {product.description}
           </p>
 
-          {/* This button handles the Zustand cart logic */}
+          {/* Corrected Import Component */}
           <AddToCartButton product={product} />
 
           {/* Artisan Credit */}
