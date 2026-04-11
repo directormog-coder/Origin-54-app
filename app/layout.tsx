@@ -1,9 +1,15 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Bebas_Neue } from "next/font/google";
 import "./globals.css";
+<<<<<<< HEAD
 import Navbar from "@/components/layout/Navbar"; // Updated path
 import Footer from "@/components/layout/Footer";
+=======
+import Navbar from "@/components/layout/Navbar"; // Corrected path
+import Footer from "@/components/layout/Footer"; // Corrected path
+>>>>>>> 1c884f001bf5553ae24941ea97044b54e7ae9561
 
+// Luxury Serif Font for body text
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
@@ -11,6 +17,7 @@ const cormorant = Cormorant_Garamond({
   display: "swap",
 });
 
+// Bold Display Font for headers
 const bebas = Bebas_Neue({
   subsets: ["latin"],
   weight: ["400"],
@@ -22,7 +29,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  themeColor: "#F8F1EA",
+  themeColor: "#F8F1EA", // Matches 'cream' background
 };
 
 export const metadata: Metadata = {
@@ -42,6 +49,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <body className="antialiased min-h-screen flex flex-col bg-[var(--cream)] selection:bg-[var(--gold)] selection:text-white">
         <Navbar />
+        {/* 'flex-grow' ensures the footer stays at the bottom on short pages */}
         <main className="flex-grow">
           {children}
         </main>
