@@ -37,3 +37,5 @@ export default function ProductCard({ id, name, price, image_url, category }: Pr
     </Link>
   );
 }
+
+

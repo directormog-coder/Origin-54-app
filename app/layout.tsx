@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Bebas_Neue } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar"; // Updated path
-import Footer from "@/components/Footer";
+import Footer from "@/components/layout/Footer";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -50,3 +50,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     </html>
   );
 }
+
+
+
+

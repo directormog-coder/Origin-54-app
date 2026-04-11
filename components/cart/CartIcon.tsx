@@ -40,3 +40,5 @@ export default function CartIcon({ className }: CartIconProps) {
     </Link>
   );
 }
+
+

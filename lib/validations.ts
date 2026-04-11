@@ -19,3 +19,5 @@ export const contactSchema = z.object({
 export type CheckoutInput = z.infer<typeof checkoutSchema>;
 export type ContactInput = z.infer<typeof contactSchema>;
 
+
+

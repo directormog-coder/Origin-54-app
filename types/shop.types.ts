@@ -43,3 +43,5 @@ export interface PaystackResponse {
   access_code: string
   reference: string
 }
+
+

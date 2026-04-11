@@ -28,3 +28,5 @@ export const CONTACT = {
   phone: "+234 800 000 0000",
   address: "Lagos, Nigeria",
 };
+
+
