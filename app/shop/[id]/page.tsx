@@ -1,14 +1,9 @@
-<<<<<<< HEAD
-import { createClient } from "@/lib/supabase/server";
-import Image from "next/image";
-import { notFound } from "next/navigation";
-import AddToCartButton from "@/components/cart/AddToCartButton";
-=======
+
 import { createClient } from "@/lib/supabase/server"; // Corrected path
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import AddToCartButton from "@/components/cart/AddToCartButton"; // Updated to the new subfolder
->>>>>>> 1c884f001bf5553ae24941ea97044b54e7ae9561
+
 
 // Next.js 15: params is now async/Promise-based
 export default async function ProductPage({ 

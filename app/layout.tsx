@@ -1,13 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Bebas_Neue } from "next/font/google";
 import "./globals.css";
-<<<<<<< HEAD
-import Navbar from "@/components/layout/Navbar"; // Updated path
-import Footer from "@/components/layout/Footer";
-=======
+
 import Navbar from "@/components/layout/Navbar"; // Corrected path
 import Footer from "@/components/layout/Footer"; // Corrected path
->>>>>>> 1c884f001bf5553ae24941ea97044b54e7ae9561
+
 
 // Luxury Serif Font for body text
 const cormorant = Cormorant_Garamond({
