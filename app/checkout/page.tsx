@@ -1,17 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { useCartStore } from "@/store/cartStore";
+import { useCart } from "@/lib/hooks/useCart";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-
-export const metadata = {
-  title: "Checkout | Origin 54",
-  description: "Complete your purchase from the Asili Collective.",
-};
+import { formatPrice } from "@/lib/utils";
 
 export default function CheckoutPage() {
-  const { items, total, clearCart } = useCartStore();
+  const { items, total, clearCart } = useCart();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -84,7 +80,7 @@ export default function CheckoutPage() {
                   required
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full bg-transparent border-b border-[var(--charcoal)]/20 py-3 font-serif focus:border-[var(--gold)] focus:outline-none transition-colors"
+                  className="w-full bg-transparent border-b border-[var(--charcoal)]/20 py-3 font-serif focus:border-[var(--gold)] focus:outline-none transition-colors placeholder:text-[var(--charcoal)]/40"
                 />
               </div>
 
@@ -99,7 +95,7 @@ export default function CheckoutPage() {
                     required
                     value={formData.firstName}
                     onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                    className="w-full bg-transparent border-b border-[var(--charcoal)]/20 py-3 font-serif focus:border-[var(--gold)] focus:outline-none transition-colors"
+                    className="w-full bg-transparent border-b border-[var(--charcoal)]/20 py-3 font-serif focus:border-[var(--gold)] focus:outline-none transition-colors placeholder:text-[var(--charcoal)]/40"
                   />
                   <input
                     type="text"
@@ -107,7 +103,7 @@ export default function CheckoutPage() {
                     required
                     value={formData.lastName}
                     onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                    className="w-full bg-transparent border-b border-[var(--charcoal)]/20 py-3 font-serif focus:border-[var(--gold)] focus:outline-none transition-colors"
+                    className="w-full bg-transparent border-b border-[var(--charcoal)]/20 py-3 font-serif focus:border-[var(--gold)] focus:outline-none transition-colors placeholder:text-[var(--charcoal)]/40"
                   />
                 </div>
                 <input
@@ -116,7 +112,7 @@ export default function CheckoutPage() {
                   required
                   value={formData.address}
                   onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                  className="w-full bg-transparent border-b border-[var(--charcoal)]/20 py-3 font-serif focus:border-[var(--gold)] focus:outline-none transition-colors mb-4"
+                  className="w-full bg-transparent border-b border-[var(--charcoal)]/20 py-3 font-serif focus:border-[var(--gold)] focus:outline-none transition-colors placeholder:text-[var(--charcoal)]/40 mb-4"
                 />
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <input
@@ -125,7 +121,7 @@ export default function CheckoutPage() {
                     required
                     value={formData.city}
                     onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                    className="w-full bg-transparent border-b border-[var(--charcoal)]/20 py-3 font-serif focus:border-[var(--gold)] focus:outline-none transition-colors"
+                    className="w-full bg-transparent border-b border-[var(--charcoal)]/20 py-3 font-serif focus:border-[var(--gold)] focus:outline-none transition-colors placeholder:text-[var(--charcoal)]/40"
                   />
                   <input
                     type="text"
@@ -133,7 +129,7 @@ export default function CheckoutPage() {
                     required
                     value={formData.country}
                     onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-                    className="w-full bg-transparent border-b border-[var(--charcoal)]/20 py-3 font-serif focus:border-[var(--gold)] focus:outline-none transition-colors"
+                    className="w-full bg-transparent border-b border-[var(--charcoal)]/20 py-3 font-serif focus:border-[var(--gold)] focus:outline-none transition-colors placeholder:text-[var(--charcoal)]/40"
                   />
                 </div>
                 <input
@@ -142,7 +138,7 @@ export default function CheckoutPage() {
                   required
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="w-full bg-transparent border-b border-[var(--charcoal)]/20 py-3 font-serif focus:border-[var(--gold)] focus:outline-none transition-colors"
+                  className="w-full bg-transparent border-b border-[var(--charcoal)]/20 py-3 font-serif focus:border-[var(--gold)] focus:outline-none transition-colors placeholder:text-[var(--charcoal)]/40"
                 />
               </div>
 
@@ -151,7 +147,7 @@ export default function CheckoutPage() {
                 disabled={isLoading}
                 className="w-full bg-[var(--gold)] text-[var(--charcoal)] py-5 font-display tracking-widest text-sm hover:bg-[var(--charcoal)] hover:text-[var(--cream)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isLoading ? "PROCESSING..." : `PAY $${total.toFixed(2)}`}
+                {isLoading ? "PROCESSING..." : `PAY ${formatPrice(total)}`}
               </button>
             </form>
           </div>
@@ -166,7 +162,7 @@ export default function CheckoutPage() {
               <div className="space-y-4 mb-8">
                 {items.map((item) => (
                   <div key={item.id} className="flex gap-4 items-center">
-                    <div className="relative w-16 h-20 bg-[var(--cream)]/10">
+                    <div className="relative w-16 h-20 bg-[var(--cream)]/10 overflow-hidden">
                       <Image
                         src={item.image_url}
                         alt={item.name}
@@ -181,11 +177,11 @@ export default function CheckoutPage() {
                     <div className="flex-grow">
                       <p className="font-display text-sm uppercase">{item.name}</p>
                       <p className="font-serif text-xs text-[var(--cream)]/60">
-                        ${item.price} x {item.quantity}
+                        {formatPrice(item.price)} × {item.quantity}
                       </p>
                     </div>
                     <p className="font-display text-sm">
-                      ${(item.price * item.quantity).toFixed(2)}
+                      {formatPrice(item.price * item.quantity)}
                     </p>
                   </div>
                 ))}
@@ -195,7 +191,7 @@ export default function CheckoutPage() {
               
               <div className="flex justify-between font-display text-xl">
                 <span>Total</span>
-                <span className="text-[var(--gold)]">${total.toFixed(2)}</span>
+                <span className="text-[var(--gold)]">{formatPrice(total)}</span>
               </div>
             </div>
           </div>
