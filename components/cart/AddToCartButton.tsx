@@ -1,38 +1,62 @@
 "use client";
 
-import { createClient } from "@/lib/supabase/client"; // Browser-side connection
-import { useCart } from "@/lib/store";
+import { useCart } from "@/lib/hooks/useCart";
+import { ShoppingBag, Check } from "lucide-react";
+import { useState } from "react";
 
-interface Props {
+interface AddToCartButtonProps {
   product: {
     id: string;
     name: string;
     price: number;
     image_url: string;
+    category: string;
+    artisans?: { name: string } | null;
   };
+  className?: string;
 }
 
-export default function AddToCartButton({ product }: Props) {
-  const addToCart = useCart((state) => state.addToCart);
-  // We initialize the client here if we wanted to track 'Add to Cart' events in Supabase
-  const supabase = createClient(); 
+export default function AddToCartButton({ product, className }: AddToCartButtonProps) {
+  const { addItem } = useCart();
+  const [isAdded, setIsAdded] = useState(false);
 
   const handleAdd = () => {
-    addToCart({
+    addItem({
       id: product.id,
       name: product.name,
       price: product.price,
-      image: product.image_url,
-      quantity: 1
+      image_url: product.image_url,
+      category: product.category,
+      artisan_name: product.artisans?.name,
     });
+    
+    setIsAdded(true);
+    setTimeout(() => setIsAdded(false), 2000);
   };
 
   return (
-    <button 
+    <button
       onClick={handleAdd}
-      className="btn-gold w-full mt-10 py-5 text-sm tracking-[0.2em] font-display uppercase"
+      disabled={isAdded}
+      className={`
+        flex items-center justify-center gap-3 w-full py-4 font-display tracking-widest text-sm
+        transition-all duration-300
+        ${isAdded 
+          ? "bg-green-600 text-white" 
+          : "bg-[var(--gold)] text-[var(--charcoal)] hover:bg-[var(--charcoal)] hover:text-[var(--cream)]"
+        }
+        ${className}
+      `}
     >
-      Add to Bag
+      {isAdded ? (
+        <>
+          <Check size={18} /> ADDED TO BAG
+        </>
+      ) : (
+        <>
+          <ShoppingBag size={18} /> ADD TO BAG
+        </>
+      )}
     </button>
   );
 }
