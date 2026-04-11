@@ -3,43 +3,84 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useCart } from "@/lib/store";
+import { useCart } from "@/lib/hooks/useCart";
+import { formatPrice } from "@/lib/utils";
 import { ShoppingBag, X, Plus, Minus, Menu, ArrowRight } from "lucide-react";
 
 export default function Navbar() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { cart, addToCart, removeFromCart } = useCart();
+  const { items, addItem, removeItem, updateQuantity, total, itemCount } = useCart();
 
-  const itemCount = cart.reduce((acc, item) => acc + item.quantity, 0);
-  const subtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const handleAddItem = (item: any) => {
+    addItem({
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      image_url: item.image_url,
+      category: item.category,
+      artisan_name: item.artisan_name,
+    });
+  };
+
+  const handleRemoveItem = (id: string) => {
+    removeItem(id);
+  };
 
   return (
     <>
       <nav className="fixed top-0 w-full z-[60] flex items-center justify-between px-6 md:px-12 py-4 bg-[var(--cream)]/90 backdrop-blur-md border-b border-[var(--gold)]/10">
-        <button className="md:hidden text-[var(--charcoal)]" onClick={() => setIsMenuOpen(true)}>
+        <button 
+          className="md:hidden text-[var(--charcoal)]" 
+          onClick={() => setIsMenuOpen(true)}
+          aria-label="Open menu"
+        >
           <Menu size={24} />
         </button>
 
-        <Link href="/" className="flex items-center gap-3 absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0">
-          <Image src="/logo.png" alt="Origin 54" width={42} height={42} className="rounded-full border border-[var(--gold)]/20" />
+        <Link 
+          href="/" 
+          className="flex items-center gap-3 absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0"
+        >
+          <Image 
+            src="/logo.png" 
+            alt="Origin 54" 
+            width={42} 
+            height={42} 
+            className="rounded-full border border-[var(--gold)]/20" 
+            priority
+          />
           <div className="hidden sm:block leading-none">
-            <span className="font-display text-xl text-[var(--charcoal)] block uppercase">Origin 54</span>
-            <span className="font-serif text-[7px] tracking-widest text-[var(--gold)] uppercase italic">The Asili Collective</span>
+            <span className="font-display text-xl text-[var(--charcoal)] block uppercase">
+              Origin 54
+            </span>
+            <span className="font-serif text-[7px] tracking-widest text-[var(--gold)] uppercase italic">
+              The Asili Collective
+            </span>
           </div>
         </Link>
 
         <div className="hidden md:flex gap-10 text-[10px] font-bold tracking-[0.2em] text-[var(--charcoal)] uppercase">
-          <Link href="/shop" className="hover:text-[var(--gold)] transition-colors">Shop</Link>
-          <Link href="/artisans" className="hover:text-[var(--gold)] transition-colors">Artisans</Link>
-          <Link href="/about" className="hover:text-[var(--gold)] transition-colors">Our Story</Link>
+          <Link href="/shop" className="hover:text-[var(--gold)] transition-colors">
+            Shop
+          </Link>
+          <Link href="/artisans" className="hover:text-[var(--gold)] transition-colors">
+            Artisans
+          </Link>
+          <Link href="/about" className="hover:text-[var(--gold)] transition-colors">
+            Our Story
+          </Link>
         </div>
 
-        <button onClick={() => setIsCartOpen(true)} className="relative p-2 text-[var(--charcoal)]">
+        <button 
+          onClick={() => setIsCartOpen(true)} 
+          className="relative p-2 text-[var(--charcoal)]"
+          aria-label={`Shopping cart with ${itemCount} items`}
+        >
           <ShoppingBag size={22} strokeWidth={1.5} />
           {itemCount > 0 && (
             <span className="absolute top-0 right-0 bg-[var(--gold)] text-white text-[9px] rounded-full w-4 h-4 flex items-center justify-center font-bold">
-              {itemCount}
+              {itemCount > 99 ? "99+" : itemCount}
             </span>
           )}
         </button>
@@ -48,11 +89,19 @@ export default function Navbar() {
       {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="fixed inset-0 z-[70] bg-[var(--charcoal)] flex flex-col px-8 pt-16 pb-10">
-          <button onClick={() => setIsMenuOpen(false)} className="absolute top-5 right-6 text-[var(--cream)]">
+          <button 
+            onClick={() => setIsMenuOpen(false)} 
+            className="absolute top-5 right-6 text-[var(--cream)]"
+            aria-label="Close menu"
+          >
             <X size={26} />
           </button>
           <nav className="flex flex-col gap-8 mt-8">
-            {[["Shop", "/shop"], ["Artisans", "/artisans"], ["Our Story", "/about"]].map(([label, href]) => (
+            {[
+              ["Shop", "/shop"], 
+              ["Artisans", "/artisans"], 
+              ["Our Story", "/about"]
+            ].map(([label, href]) => (
               <Link
                 key={href}
                 href={href}
@@ -69,19 +118,28 @@ export default function Navbar() {
       {/* Cart Drawer */}
       {isCartOpen && (
         <div className="fixed inset-0 z-[70] flex justify-end">
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setIsCartOpen(false)} />
+          <div 
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm" 
+            onClick={() => setIsCartOpen(false)} 
+          />
           <div className="relative w-full max-w-md bg-[var(--cream)] h-full flex flex-col shadow-2xl">
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-5 border-b border-[var(--gold)]/20">
-              <h2 className="font-display text-xl uppercase tracking-widest text-[var(--charcoal)]">Your Bag</h2>
-              <button onClick={() => setIsCartOpen(false)} className="text-[var(--charcoal)]">
+              <h2 className="font-display text-xl uppercase tracking-widest text-[var(--charcoal)]">
+                Your Bag ({itemCount})
+              </h2>
+              <button 
+                onClick={() => setIsCartOpen(false)} 
+                className="text-[var(--charcoal)]"
+                aria-label="Close cart"
+              >
                 <X size={22} />
               </button>
             </div>
 
             {/* Items */}
             <div className="flex-1 overflow-y-auto px-6 py-4 space-y-6">
-              {cart.length === 0 ? (
+              {items.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full gap-4 text-center">
                   <ShoppingBag size={40} strokeWidth={1} className="text-[var(--charcoal)]/30" />
                   <p className="font-serif italic text-[var(--charcoal)]/50">Your bag is empty</p>
@@ -93,42 +151,74 @@ export default function Navbar() {
                   </button>
                 </div>
               ) : (
-                cart.map((item) => (
+                items.map((item) => (
                   <div key={item.id} className="flex gap-4">
-                    {item.image && (
-                      <div className="relative w-20 h-24 flex-shrink-0 bg-[var(--charcoal)]/5">
-                        <Image src={item.image} alt={item.name} fill className="object-cover" />
-                      </div>
-                    )}
-                    <div className="flex-1">
-                      <p className="font-serif text-sm font-medium text-[var(--charcoal)]">{item.name}</p>
+                    <div className="relative w-20 h-24 flex-shrink-0 bg-[var(--charcoal)]/5 overflow-hidden">
+                      <Image 
+                        src={item.image_url || "/logo.png"} 
+                        alt={item.name} 
+                        fill 
+                        className="object-cover"
+                        sizes="80px"
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-serif text-sm font-medium text-[var(--charcoal)] truncate">
+                        {item.name}
+                      </p>
+                      {item.artisan_name && (
+                        <p className="font-serif text-xs text-[var(--charcoal)]/50 italic">
+                          by {item.artisan_name}
+                        </p>
+                      )}
                       <p className="font-serif text-xs text-[var(--charcoal)]/50 mb-2">
-                        R{item.price.toLocaleString()}
+                        {formatPrice(item.price)}
                       </p>
                       <div className="flex items-center gap-3">
-                        <button onClick={() => removeFromCart(item.id)} className="text-[var(--charcoal)]/60 hover:text-[var(--charcoal)]">
+                        <button 
+                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                          className="text-[var(--charcoal)]/60 hover:text-[var(--charcoal)] disabled:opacity-30"
+                          disabled={item.quantity <= 1}
+                          aria-label="Decrease quantity"
+                        >
                           <Minus size={14} />
                         </button>
-                        <span className="text-sm font-bold w-4 text-center">{item.quantity}</span>
-                        <button onClick={() => addToCart(item)} className="text-[var(--charcoal)]/60 hover:text-[var(--charcoal)]">
+                        <span className="text-sm font-bold w-4 text-center">
+                          {item.quantity}
+                        </span>
+                        <button 
+                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          className="text-[var(--charcoal)]/60 hover:text-[var(--charcoal)]"
+                          aria-label="Increase quantity"
+                        >
                           <Plus size={14} />
                         </button>
                       </div>
                     </div>
-                    <p className="font-serif text-sm font-semibold text-[var(--charcoal)]">
-                      R{(item.price * item.quantity).toLocaleString()}
-                    </p>
+                    <div className="text-right">
+                      <p className="font-serif text-sm font-semibold text-[var(--charcoal)]">
+                        {formatPrice(item.price * item.quantity)}
+                      </p>
+                      <button
+                        onClick={() => handleRemoveItem(item.id)}
+                        className="text-[10px] text-[var(--charcoal)]/40 hover:text-[var(--charcoal)] underline mt-1"
+                      >
+                        Remove
+                      </button>
+                    </div>
                   </div>
                 ))
               )}
             </div>
 
             {/* Footer */}
-            {cart.length > 0 && (
+            {items.length > 0 && (
               <div className="px-6 py-6 border-t border-[var(--gold)]/20 space-y-4">
                 <div className="flex justify-between font-serif text-sm">
                   <span className="text-[var(--charcoal)]/60">Subtotal</span>
-                  <span className="font-semibold text-[var(--charcoal)]">R{subtotal.toLocaleString()}</span>
+                  <span className="font-semibold text-[var(--charcoal)]">
+                    {formatPrice(total)}
+                  </span>
                 </div>
                 <p className="text-[10px] text-[var(--charcoal)]/40 font-serif italic">
                   Shipping & duties calculated at checkout
