@@ -1,4 +1,4 @@
-import { NextResponse } from "next/headers";
+import { NextResponse } from "next/server";
 import axios from "axios";
 
 export async function POST(req: Request) {
@@ -23,6 +23,10 @@ export async function POST(req: Request) {
 
     return NextResponse.json(response.data.data);
   } catch (error) {
-    return NextResponse.json({ error: "Checkout failed" }, { status: 500 });
+    console.error("Checkout error:", error);
+    return NextResponse.json(
+      { error: "Checkout failed", message: error instanceof Error ? error.message : "Unknown error" }, 
+      { status: 500 }
+    );
   }
 }
