@@ -1,19 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import ProductCard from '@/components/products/ProductCard'; // Adjust path if needed
-import { createClient } from '@/lib/supabase/client'; // Uses the repaired path!
+import { createClient } from '@/lib/supabase/client';
 
 export default function ShopPage() {
   const [products, setProducts] = useState<any[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<any[]>([]);
-  const [activeCategory, setActiveCategory] = useState<string>('ALL'); // Handle 'All' view
+  const [activeCategory, setActiveCategory] = useState<string>('ALL');
 
-  // Categories MUST match the SQL precisely (capitalization matters!)
-  const categories = ['ALL', 'Woman', 'Man', 'CHILDREN', 'ACCESSORIES'];
+  const categories = ['ALL', 'Woman', 'Man', 'Children', 'Accessories'];
   const supabase = createClient();
 
-  // Fetch all products once on load
   useEffect(() => {
     async function fetchProducts() {
       const { data, error } = await supabase.from('products').select('*');
@@ -21,17 +18,16 @@ export default function ShopPage() {
         console.error('Error fetching products:', error);
       } else {
         setProducts(data || []);
-        setFilteredProducts(data || []); // Default to showing all
+        setFilteredProducts(data || []);
       }
     }
     fetchProducts();
   }, [supabase]);
 
-  // The dynamic filtering function
   const filterByCategory = (category: string) => {
     setActiveCategory(category);
     if (category === 'ALL') {
-      setFilteredProducts(products); // Reset the view
+      setFilteredProducts(products);
     } else {
       const filtered = products.filter((p) => p.category === category);
       setFilteredProducts(filtered);
@@ -40,34 +36,43 @@ export default function ShopPage() {
 
   return (
     <main className="container mx-auto p-4 md:p-8">
-      <h1 className="text-4xl font-bold mb-8 text-origin-black">Origin 54 Collection</h1>
+      <h1 className="text-4xl font-bold mb-8 text-black">Origin 54 Collection</h1>
 
-      {/* 1. The Dynamic Tiles (Category Selector) */}
+      {/* Category Tiles */}
       <section className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-12">
         {categories.map((cat) => (
           <button
             key={cat}
             onClick={() => filterByCategory(cat)}
-            className={p-6 border-2 text-center rounded-lg transition-all 
-              }
+            className={p-6 border-2 text-center rounded-lg transition-all \}
           >
             {cat}
           </button>
-        ));
+        ))}
       </section>
 
-      {/* 2. The Dynamic Product Grid */}
+      {/* Product Grid */}
       <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {filteredProducts.map((product) => (
-          <ProductCard key={product.id} product={product} />
+          <div key={product.id} className="border p-4 rounded-lg shadow-sm bg-white">
+            <img 
+              src={product.image_url} 
+              alt={product.name} 
+              className="w-full h-64 object-cover mb-4 rounded"
+            />
+            <h2 className="font-bold text-lg">{product.name}</h2>
+            <p className="text-gray-600">\</p>
+            <button className="mt-4 w-full bg-black text-white py-2 rounded hover:bg-gray-800 transition-colors">
+              Add to Bag
+            </button>
+          </div>
         ))}
       </section>
       
-      {/* 3. Handle Empty Category */}
+      {/* Empty State */}
       {filteredProducts.length === 0 && (
-        <div className="text-center py-20 text-origin-gray">
+        <div className="text-center py-20 text-gray-400">
           <p>No unique {activeCategory.toLowerCase()} pieces are available at the moment.</p>
-          <p>Please check back soon.</p>
         </div>
       )}
     </main>
