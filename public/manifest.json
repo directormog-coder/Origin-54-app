@@ -1,0 +1,23 @@
+@'
+{
+  "name": "Origin 54",
+  "short_name": "O54",
+  "description": "African luxury fashion rooted in heritage.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f0e8",
+  "theme_color": "#1a1a1a",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
+'@ | Out-File -FilePath public/manifest.json -Encoding utf8
