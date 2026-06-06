@@ -11,7 +11,6 @@ export function useCart() {
     setIsHydrated(true);
   }, []);
 
-  // Prevent hydration mismatch by returning empty state until hydrated
   if (!isHydrated) {
     return {
       items: [] as CartItem[],
@@ -26,7 +25,3 @@ export function useCart() {
 
   return cart;
 }
-
-
-
-// Deep Repair Sync: 2026-04-11 17:28:30
