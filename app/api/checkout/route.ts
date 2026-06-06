@@ -9,7 +9,7 @@ export async function POST(req: Request) {
       "https://api.paystack.co/transaction/initialize",
       {
         email,
-        amount: amount * 100, // Paystack counts in kobo/cents
+        amount: amount * 100,
         callback_url: `${process.env.NEXT_PUBLIC_URL}/thanks`,
         metadata
       },
@@ -31,7 +31,3 @@ export async function POST(req: Request) {
   }
 }
 
-
-
-// Deep Repair Sync: 2026-04-11 17:28:30
-// API Fix: 19:49
