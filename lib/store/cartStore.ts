@@ -76,11 +76,7 @@ export const useCartStore = create<CartStore>()(
     {
       name: "origin54-cart",
       storage: createJSONStorage(() => localStorage),
-      skipHydration: true, // Important for Next.js to avoid hydration mismatch
+      skipHydration: true,
     }
   )
 );
-
-
-
-// Deep Repair Sync: 2026-04-11 17:28:30
