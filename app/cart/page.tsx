@@ -40,13 +40,9 @@ export default function CartPage() {
         </p>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          {/* Cart Items */}
           <div className="lg:col-span-2 space-y-8">
             {items.map((item) => (
-              <div 
-                key={item.id} 
-                className="flex gap-6 p-6 bg-[var(--cream-dark)] border border-[var(--gold)]/10"
-              >
+              <div key={item.id} className="flex gap-6 p-6 bg-[var(--cream-dark)] border border-[var(--gold)]/10">
                 <div className="relative w-32 h-40 flex-shrink-0 bg-[var(--charcoal)]/5 overflow-hidden">
                   <Image
                     src={item.image_url}
@@ -115,7 +111,6 @@ export default function CartPage() {
             </button>
           </div>
 
-          {/* Order Summary */}
           <div className="lg:col-span-1">
             <div className="bg-[var(--charcoal)] p-8 text-[var(--cream)] sticky top-32">
               <h2 className="font-display text-2xl uppercase tracking-widest mb-8">
@@ -158,7 +153,3 @@ export default function CartPage() {
     </main>
   );
 }
-
-
-
-// Deep Repair Sync: 2026-04-11 17:28:30
