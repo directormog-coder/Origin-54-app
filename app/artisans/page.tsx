@@ -1,6 +1,11 @@
-import { createClient } from "@/lib/supabase/server"; // Updated path
+import { createClient } from "@/lib/supabase/server";
 import Image from "next/image";
 import Link from "next/link";
+
+export const metadata = {
+  title: "Artisans | Origin 54",
+  description: "Meet the master craftspeople behind the Asili Collective.",
+};
 
 export default async function ArtisansPage() {
   const supabase = await createClient();
@@ -36,7 +41,8 @@ export default async function ArtisansPage() {
                   src={artisan.profile_image || "/logo.png"} 
                   alt={artisan.name} 
                   fill 
-                  className={`object-cover ${!artisan.profile_image ? 'p-16 opacity-20' : ''}`}
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
                 />
               </div>
               <div className="absolute -bottom-10 -left-10 w-40 h-40 tribal-bg opacity-10 z-0" />
@@ -50,7 +56,7 @@ export default async function ArtisansPage() {
                 {artisan.name}
               </h2>
               <p className="font-serif text-[var(--charcoal)]/70 text-lg md:text-xl leading-relaxed italic">
-                "{artisan.bio || "Crafting heritage pieces with soul and tradition."}"
+                &ldquo;{artisan.bio || "Crafting heritage pieces with soul and tradition."}&rdquo;
               </p>
               
               {artisan.products && artisan.products.length > 0 && (
@@ -61,7 +67,7 @@ export default async function ArtisansPage() {
                   <div className="flex gap-4">
                     {artisan.products.slice(0, 2).map((prod: any) => (
                       <Link key={prod.id} href={`/shop/${prod.id}`} className="group relative w-20 h-24 overflow-hidden bg-[var(--cream-dark)]">
-                        <Image src={prod.image_url} alt={prod.name} fill className="object-cover group-hover:scale-110 transition-transform" />
+                        <Image src={prod.image_url} alt={prod.name} fill className="object-cover group-hover:scale-110 transition-transform" sizes="80px" />
                       </Link>
                     ))}
                   </div>
@@ -74,7 +80,3 @@ export default async function ArtisansPage() {
     </main>
   );
 }
-
-
-
-// Deep Repair Sync: 2026-04-11 17:28:30
