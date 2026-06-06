@@ -4,7 +4,6 @@ import { createClient } from "@/lib/supabase/server";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = await createClient();
   
-  // Fetch all products
   const { data: products } = await supabase.from("products").select("id, updated_at");
   const { data: artisans } = await supabase.from("artisans").select("id, updated_at");
 
@@ -35,8 +34,3 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [...staticRoutes, ...productRoutes, ...artisanRoutes];
 }
 
-
-
-// Final Path Fix Build
-// Force Build Sync: 17:14:44
-// Deep Repair Sync: 2026-04-11 17:28:30
