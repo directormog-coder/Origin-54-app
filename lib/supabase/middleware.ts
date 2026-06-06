@@ -14,7 +14,7 @@ export async function updateSession(request: NextRequest) {
         getAll() {
           return request.cookies.getAll();
         },
-        setAll(cookiesToSet: any[]) {
+        setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
           supabaseResponse = NextResponse.next({
             request,
@@ -27,19 +27,7 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  // Refresh session if expired
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  // Optional: Protected route logic
-  // if (!user && request.nextUrl.pathname.startsWith('/admin')) {
-  //   return NextResponse.redirect(new URL('/login', request.url));
-  // }
+  await supabase.auth.getUser();
 
   return supabaseResponse;
 }
-
-
-
-// Deep Repair Sync: 2026-04-11 17:28:30
