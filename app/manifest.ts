@@ -2,6 +2,17 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
+    name: "OriginI notice my previous response was cut off. Let me complete the remaining files for Phase 1:
+
+---
+
+### 21. `app/manifest.ts` (Complete)
+
+```typescript
+import type { MetadataRoute } from "next";
+
+export default function manifest(): MetadataRoute.Manifest {
+  return {
     name: "Origin 54 - The Asili Collective",
     short_name: "Origin 54",
     description: "African luxury fashion rooted in heritage and artisan craftsmanship.",
@@ -23,7 +34,3 @@ export default function manifest(): MetadataRoute.Manifest {
     ],
   };
 }
-
-
-
-// Deep Repair Sync: 2026-04-11 17:28:30
