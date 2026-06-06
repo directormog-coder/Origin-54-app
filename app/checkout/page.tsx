@@ -67,7 +67,6 @@ export default function CheckoutPage() {
         </h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Checkout Form */}
           <div>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="bg-[var(--cream-dark)] p-8 border border-[var(--gold)]/10">
@@ -152,7 +151,6 @@ export default function CheckoutPage() {
             </form>
           </div>
 
-          {/* Order Summary */}
           <div className="lg:pl-12">
             <div className="bg-[var(--charcoal)] p-8 text-[var(--cream)] sticky top-32">
               <h2 className="font-display text-2xl uppercase tracking-widest mb-8">
@@ -200,7 +198,3 @@ export default function CheckoutPage() {
     </main>
   );
 }
-
-
-
-// Deep Repair Sync: 2026-04-11 17:28:30
