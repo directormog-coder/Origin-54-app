@@ -18,16 +18,14 @@ export default function Error({
   return (
     <main className="min-h-screen bg-[var(--cream)] flex items-center justify-center pt-20 tribal-bg">
       <div className="max-w-2xl w-full mx-auto px-6 text-center">
-        <div className="mb-8">
-          <Image 
-            src="/logo.png" 
-            alt="Origin 54" 
-            width={100} 
-            height={100} 
-            className="mx-auto opacity-50" 
-            sizes="100px"
-          />
-        </div>
+        <Image 
+          src="/logo.png" 
+          alt="Origin 54" 
+          width={100} 
+          height={100} 
+          className="mx-auto opacity-50" 
+          sizes="100px"
+        />
         
         <h1 className="font-display text-5xl md:text-6xl text-[var(--charcoal)] mb-4 uppercase">
           Something Went Wrong
@@ -62,6 +60,3 @@ export default function Error({
   );
 }
 
-
-
-// Deep Repair Sync: 2026-04-11 17:28:30
