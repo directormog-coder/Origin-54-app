@@ -1,5 +1,3 @@
-// types/database.types.ts
-
 export type Json =
   | string
   | number
@@ -129,6 +127,3 @@ export interface Database {
   }
 }
 
-
-
-// Deep Repair Sync: 2026-04-11 17:28:30
