@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 import crypto from "crypto";
 
 export async function POST(req: Request) {
@@ -9,7 +9,6 @@ export async function POST(req: Request) {
     .update(body)
     .digest("hex");
 
-  // Verify the message actually came from Paystack
   if (hash !== req.headers.get("x-paystack-signature")) {
     return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
   }
@@ -20,12 +19,13 @@ export async function POST(req: Request) {
     const supabase = await createClient();
     const { metadata } = event.data;
 
-    // Update your 'orders' table in Supabase
     await supabase.from("orders").insert({
       email: event.data.customer.email,
       amount: event.data.amount / 100,
       status: "paid",
       items: metadata.cartItems,
+      paystack_reference: event.data.reference,
+      customer_details: metadata.customer,
     });
   }
 

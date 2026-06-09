@@ -26,8 +26,6 @@ jobs:
       - name: Type Check (TypeScript)
         run: npm run build
         env:
-          # We provide dummy keys so the build process doesn't fail 
-          # due to missing environment variables.
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
           PAYSTACK_SECRET_KEY: ${{ secrets.PAYSTACK_SECRET_KEY }}

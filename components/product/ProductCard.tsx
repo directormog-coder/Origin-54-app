@@ -37,3 +37,7 @@ export default function ProductCard({ id, name, price, image_url, category }: Pr
     </Link>
   );
 }
+
+
+
+// Deep Repair Sync: 2026-04-11 17:28:30
