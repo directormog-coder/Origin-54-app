@@ -42,7 +42,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning className={`${cormorant.variable} ${bebas.variable}`}>
-      <body className="antialiased min-h-screen flex flex-col bg-[var(--cream)] selection:bg-[var(--gold)] selection:text-white">
+      <body className="antialiased min-h-screen flex flex-col bg-cream selection:bg-gold selection:text-white">
         <Navbar />
         <main className="flex-grow">{children}</main>
         <Footer />
@@ -50,3 +50,4 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     </html>
   );
 }
+
