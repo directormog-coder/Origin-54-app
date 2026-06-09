@@ -19,7 +19,7 @@ export async function POST(req: Request) {
     const supabase = await createClient();
     const { metadata } = event.data;
 
-    await supabase.from("orders").insert({
+    await (supabase.from("orders") as any).insert({
       email: event.data.customer.email,
       amount: event.data.amount / 100,
       status: "paid",
