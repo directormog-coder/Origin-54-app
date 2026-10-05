@@ -75,8 +75,18 @@ export const useCartStore = create<CartStore>()(
     }),
     {
       name: "origin54-cart",
-      storage: createJSONStorage(() => localStorage),
+      // ✅ Server-safe localStorage fallback
+      storage: createJSONStorage(() =>
+        typeof window !== "undefined"
+          ? window.localStorage
+          : {
+              getItem: () => null,
+              setItem: () => {},
+              removeItem: () => {},
+            }
+      ),
       skipHydration: true,
     }
   )
 );
+
