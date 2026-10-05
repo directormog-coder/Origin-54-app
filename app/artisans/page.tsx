@@ -7,12 +7,31 @@ export const metadata = {
   description: "Meet the master craftspeople behind the Asili Collective.",
 };
 
+// Explicit interfaces to satisfy Next.js / TypeScript build-time validation
+interface Product {
+  id: string;
+  name: string;
+  image_url: string;
+}
+
+interface Artisan {
+  id: string;
+  name: string;
+  location?: string;
+  bio?: string;
+  profile_image?: string;
+  products?: Product[];
+}
+
 export default async function ArtisansPage() {
   const supabase = await createClient();
   
-  const { data: artisans } = await supabase
+  const { data: rawArtisans } = await supabase
     .from("artisans")
     .select("*, products(id, name, image_url)");
+
+  // Type assertion prevents TypeScript from inferring 'never[]'
+  const artisans = (rawArtisans as unknown as Artisan[]) || [];
 
   return (
     <main className="min-h-screen bg-[var(--cream)] pt-32 pb-20 overflow-hidden">
@@ -27,7 +46,7 @@ export default async function ArtisansPage() {
       </header>
 
       <div className="space-y-32 md:space-y-48">
-        {artisans?.map((artisan, index) => (
+        {artisans.map((artisan, index) => (
           <section 
             key={artisan.id} 
             className={`container mx-auto px-6 flex flex-col ${
@@ -65,7 +84,7 @@ export default async function ArtisansPage() {
                     Featured Work
                   </p>
                   <div className="flex gap-4">
-                    {artisan.products.slice(0, 2).map((prod: any) => (
+                    {artisan.products.slice(0, 2).map((prod) => (
                       <Link key={prod.id} href={`/shop/${prod.id}`} className="group relative w-20 h-24 overflow-hidden bg-[var(--cream-dark)]">
                         <Image src={prod.image_url} alt={prod.name} fill className="object-cover group-hover:scale-110 transition-transform" sizes="80px" />
                       </Link>
