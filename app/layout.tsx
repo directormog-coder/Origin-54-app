@@ -21,27 +21,55 @@ const bebas = Bebas_Neue({
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  themeColor: "#F8F1EA",
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: "#1a1a1a",
+  viewportFit: "cover",
 };
 
 export const metadata: Metadata = {
-  title: "Origin 54 — The Asili Collective",
-  description: "African luxury fashion rooted in heritage and artisan craftsmanship.",
-  icons: {
-    icon: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
+  metadataBase: new URL("https://origin54.com"),
+  title: {
+    default: "Origin 54 — The Asili Collective",
+    template: "%s | Origin 54",
   },
+  description:
+    "African luxury fashion rooted in heritage and artisan craftsmanship. Celebrating the bold spirit of Africa's 54 nations.",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon-192x192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+  },
+  manifest: "/manifest.json",
   openGraph: {
-    title: "Origin 54 | Born From Africa",
-    description: "The Asili Collective - Luxury African fashion celebrating heritage through modern design.",
     type: "website",
+    locale: "en_US",
+    url: "https://origin54.com",
+    siteName: "Origin 54",
+    title: "Origin 54 — The Asili Collective",
+    description: "African luxury fashion celebrating heritage through modern design.",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Origin 54",
+      },
+    ],
   },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning className={`${cormorant.variable} ${bebas.variable}`}>
+      <head>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="Origin 54" />
+        <link rel="manifest" href="/manifest.json" />
+      </head>
       <body className="antialiased min-h-screen flex flex-col bg-cream selection:bg-gold selection:text-white">
         <Navbar />
         <main className="flex-grow">{children}</main>
@@ -50,4 +78,3 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     </html>
   );
 }
-
