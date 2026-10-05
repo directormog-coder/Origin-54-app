@@ -1,20 +1,29 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
+type RequestMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
-export async function apiCall<T>(
+type ApiRequestOptions = RequestInit & {
+  body?: unknown;
+  headers?: Record<string, string>;
+};
+
+export async function apiRequest<T>(
   endpoint: string,
-  options?: RequestInit
+  options: ApiRequestOptions = {}
 ): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+  const url = `${process.env.NEXT_PUBLIC_API_URL || ""}${endpoint}`;
+
+  const response = await fetch(url, {
+    ...options,
     headers: {
       "Content-Type": "application/json",
-      ...options?.headers,
+      ...(options.headers || {}),
     },
-    ...options,
+    body: options.body !== undefined ? JSON.stringify(options.body) : undefined,
   });
 
   if (!response.ok) {
-    throw new Error(`API Error: ${response.statusText}`);
+    const errorText = await response.text();
+    throw new Error(errorText || `Request failed with status ${response.status}`);
   }
 
-  return response.json();
+  return response.json() as Promise<T>;
 }
