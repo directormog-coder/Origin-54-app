@@ -7,31 +7,35 @@ export const metadata = {
   description: "Meet the master craftspeople behind the Asili Collective.",
 };
 
-// Explicit interfaces to satisfy Next.js / TypeScript build-time validation
 interface Product {
   id: string;
   name: string;
-  image_url: string;
+  image_url?: string | null;
 }
 
 interface Artisan {
   id: string;
   name: string;
-  location?: string;
-  bio?: string;
-  profile_image?: string;
-  products?: Product[];
+  location?: string | null;
+  bio?: string | null;
+  profile_image?: string | null;
+  products?: Product[] | null;
 }
+
+const getSafeImage = (src?: string | null, fallback = "/logo.png") =>
+  src && src.trim() ? src : fallback;
 
 export default async function ArtisansPage() {
   const supabase = await createClient();
-  
+
   const { data: rawArtisans } = await supabase
     .from("artisans")
     .select("*, products(id, name, image_url)");
 
-  // Type assertion prevents TypeScript from inferring 'never[]'
-  const artisans = (rawArtisans as unknown as Artisan[]) || [];
+  const artisans = ((rawArtisans ?? []) as Artisan[]).map((artisan) => ({
+    ...artisan,
+    products: artisan.products ?? [],
+  }));
 
   return (
     <main className="min-h-screen bg-[var(--cream)] pt-32 pb-20 overflow-hidden">
@@ -47,19 +51,19 @@ export default async function ArtisansPage() {
 
       <div className="space-y-32 md:space-y-48">
         {artisans.map((artisan, index) => (
-          <section 
-            key={artisan.id} 
+          <section
+            key={artisan.id}
             className={`container mx-auto px-6 flex flex-col ${
-              index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
+              index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
             } gap-12 md:gap-24 items-center`}
           >
             <div className="w-full md:w-1/2 relative">
               <div className="absolute -inset-4 border border-[var(--gold)]/10 z-0 translate-x-2 translate-y-2" />
               <div className="relative aspect-[4/5] overflow-hidden grayscale hover:grayscale-0 transition-all duration-1000 shadow-2xl z-10">
-                <Image 
-                  src={artisan.profile_image || "/logo.png"} 
-                  alt={artisan.name} 
-                  fill 
+                <Image
+                  src={getSafeImage(artisan.profile_image)}
+                  alt={artisan.name}
+                  fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
@@ -69,24 +73,40 @@ export default async function ArtisansPage() {
 
             <div className="w-full md:w-1/2 space-y-6">
               <span className="font-serif italic text-[var(--gold)] text-xl block">
-                {artisan.location}
+                {artisan.location ?? "Across the continent"}
               </span>
+
               <h2 className="font-display text-5xl md:text-6xl text-[var(--charcoal)] uppercase leading-tight">
                 {artisan.name}
               </h2>
+
               <p className="font-serif text-[var(--charcoal)]/70 text-lg md:text-xl leading-relaxed italic">
-                &ldquo;{artisan.bio || "Crafting heritage pieces with soul and tradition."}&rdquo;
+                &ldquo;
+                {artisan.bio ||
+                  "Crafting heritage pieces with soul and tradition."}
+                &rdquo;
               </p>
-              
+
               {artisan.products && artisan.products.length > 0 && (
                 <div className="pt-8 border-t border-[var(--gold)]/20">
                   <p className="font-display text-[10px] tracking-widest text-[var(--charcoal)]/40 uppercase mb-4">
                     Featured Work
                   </p>
+
                   <div className="flex gap-4">
                     {artisan.products.slice(0, 2).map((prod) => (
-                      <Link key={prod.id} href={`/shop/${prod.id}`} className="group relative w-20 h-24 overflow-hidden bg-[var(--cream-dark)]">
-                        <Image src={prod.image_url} alt={prod.name} fill className="object-cover group-hover:scale-110 transition-transform" sizes="80px" />
+                      <Link
+                        key={prod.id}
+                        href={`/shop/${prod.id}`}
+                        className="group relative w-20 h-24 overflow-hidden bg-[var(--cream-dark)]"
+                      >
+                        <Image
+                          src={getSafeImage(prod.image_url, "/placeholder-product.jpg")}
+                          alt={prod.name}
+                          fill
+                          className="object-cover group-hover:scale-110 transition-transform"
+                          sizes="80px"
+                        />
                       </Link>
                     ))}
                   </div>
