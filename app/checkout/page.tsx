@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCart } from "@/lib/hooks/useCart";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -20,8 +20,13 @@ export default function CheckoutPage() {
     phone: "",
   });
 
+  useEffect(() => {
+    if (items.length === 0) {
+      router.replace("/cart");
+    }
+  }, [items.length, router]);
+
   if (items.length === 0) {
-    router.push("/cart");
     return null;
   }
 
@@ -144,7 +149,7 @@ export default function CheckoutPage() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-[var(--gold)] text-[var(--charcoal)] py-5 font-display tracking-widest text-sm hover:bg-[var(--charcoal)] hover:text-[var(--cream)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-[var(--gold)] text-[var(--charcoal)] py-5 font-display tracking-widest text-sm hover:bg-[var(--charcoal)] hover:text-[var(--cream)] transition-colors disabled:opacity-70"
               >
                 {isLoading ? "PROCESSING..." : `PAY ${formatPrice(total)}`}
               </button>
@@ -156,7 +161,7 @@ export default function CheckoutPage() {
               <h2 className="font-display text-2xl uppercase tracking-widest mb-8">
                 Order Summary
               </h2>
-              
+
               <div className="space-y-4 mb-8">
                 {items.map((item) => (
                   <div key={item.id} className="flex gap-4 items-center">
@@ -186,7 +191,7 @@ export default function CheckoutPage() {
               </div>
 
               <div className="h-[1px] bg-[var(--gold)]/30 my-6" />
-              
+
               <div className="flex justify-between font-display text-xl">
                 <span>Total</span>
                 <span className="text-[var(--gold)]">{formatPrice(total)}</span>
