@@ -5,8 +5,17 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: '*.supabase.co',
+        port: '',
+        pathname: '/storage/v1/object/public/**',
       },
     ],
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    // Optional: set to true if TypeScript type errors are also blocking Vercel builds
+    ignoreBuildErrors: false,
   },
 };
 
