@@ -8,12 +8,12 @@ export default function HeroSection() {
       <div className="container mx-auto px-6 text-center relative z-10">
         <Image
           src="/logo.png"
-          alt="Origin 54"
+          alt="Origin 54 — The Asili Collective"
           width={180}
           height={180}
           className="mx-auto mb-8 rounded-full border-2 border-[var(--gold)]/20 shadow-2xl"
           priority
-          sizes="180px"
+          sizes="(max-width: 768px) 140px, 180px"
         />
 
         <p className="text-[var(--gold)] font-display tracking-[0.4em] text-xs mb-4 uppercase">
