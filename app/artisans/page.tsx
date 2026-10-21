@@ -1,0 +1,121 @@
+import { createClient } from "@/lib/supabase/server";
+import Image from "next/image";
+import Link from "next/link";
+
+export const metadata = {
+  title: "Artisans | Origin 54",
+  description: "Meet the master craftspeople behind the Asili Collective.",
+};
+
+interface Product {
+  id: string;
+  name: string;
+  image_url?: string | null;
+}
+
+interface Artisan {
+  id: string;
+  name: string;
+  location?: string | null;
+  bio?: string | null;
+  profile_image?: string | null;
+  products?: Product[] | null;
+}
+
+const getSafeImage = (src?: string | null, fallback = "/logo.png") =>
+  src && src.trim() ? src : fallback;
+
+export default async function ArtisansPage() {
+  const supabase = await createClient();
+
+  const { data: rawArtisans } = await supabase
+    .from("artisans")
+    .select("*, products(id, name, image_url)");
+
+  const artisans = ((rawArtisans ?? []) as Artisan[]).map((artisan) => ({
+    ...artisan,
+    products: artisan.products ?? [],
+  }));
+
+  return (
+    <main className="min-h-screen bg-[var(--cream)] pt-32 pb-20 overflow-hidden">
+      <header className="container mx-auto px-6 mb-24 text-center">
+        <p className="text-[var(--gold)] font-display tracking-[0.4em] text-xs mb-4 uppercase">
+          The Hands of Asili
+        </p>
+        <h1 className="text-6xl md:text-8xl font-display text-[var(--charcoal)] uppercase leading-none">
+          Our <span className="text-[var(--gold)]">Artisans</span>
+        </h1>
+        <div className="w-24 h-[1px] bg-[var(--gold)] mx-auto mt-8 opacity-40" />
+      </header>
+
+      <div className="space-y-32 md:space-y-48">
+        {artisans.map((artisan, index) => (
+          <section
+            key={artisan.id}
+            className={`container mx-auto px-6 flex flex-col ${
+              index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
+            } gap-12 md:gap-24 items-center`}
+          >
+            <div className="w-full md:w-1/2 relative">
+              <div className="absolute -inset-4 border border-[var(--gold)]/10 z-0 translate-x-2 translate-y-2" />
+              <div className="relative aspect-[4/5] overflow-hidden grayscale hover:grayscale-0 transition-all duration-1000 shadow-2xl z-10">
+                <Image
+                  src={getSafeImage(artisan.profile_image)}
+                  alt={artisan.name}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+              </div>
+              <div className="absolute -bottom-10 -left-10 w-40 h-40 tribal-bg opacity-10 z-0" />
+            </div>
+
+            <div className="w-full md:w-1/2 space-y-6">
+              <span className="font-serif italic text-[var(--gold)] text-xl block">
+                {artisan.location ?? "Across the continent"}
+              </span>
+
+              <h2 className="font-display text-5xl md:text-6xl text-[var(--charcoal)] uppercase leading-tight">
+                {artisan.name}
+              </h2>
+
+              <p className="font-serif text-[var(--charcoal)]/70 text-lg md:text-xl leading-relaxed italic">
+                &ldquo;
+                {artisan.bio ||
+                  "Crafting heritage pieces with soul and tradition."}
+                &rdquo;
+              </p>
+
+              {artisan.products && artisan.products.length > 0 && (
+                <div className="pt-8 border-t border-[var(--gold)]/20">
+                  <p className="font-display text-[10px] tracking-widest text-[var(--charcoal)]/40 uppercase mb-4">
+                    Featured Work
+                  </p>
+
+                  <div className="flex gap-4">
+                    {artisan.products.slice(0, 2).map((prod) => (
+                      <Link
+                        key={prod.id}
+                        href={`/shop/${prod.id}`}
+                        className="group relative w-20 h-24 overflow-hidden bg-[var(--cream-dark)]"
+                      >
+                        <Image
+                          src={getSafeImage(prod.image_url, "/placeholder-product.jpg")}
+                          alt={prod.name}
+                          fill
+                          className="object-cover group-hover:scale-110 transition-transform"
+                          sizes="80px"
+                        />
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </section>
+        ))}
+      </div>
+    </main>
+  );
+}
