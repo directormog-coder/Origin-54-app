@@ -5,5 +5,4 @@ export default function ShopLayout({
 }) {
   return <>{children}</>;
 }
-O
 
