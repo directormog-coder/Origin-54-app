@@ -61,7 +61,6 @@ export default function AdminDashboard() {
     checkAdminAndFetch();
   }, [router, supabase]);
 
-  // Handle direct file selection from mobile gallery
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -70,7 +69,6 @@ export default function AdminDashboard() {
     setFormMsg("");
 
     try {
-      // 1. Try uploading to Supabase Storage
       const fileExt = file.name.split('.').pop();
       const fileName = `${Date.now()}.${fileExt}`;
       const filePath = `product-images/${fileName}`;
@@ -92,7 +90,6 @@ export default function AdminDashboard() {
         }
       }
 
-      // 2. Fallback: Convert to Data URL (Base64) if storage fetch is blocked
       const reader = new FileReader();
       reader.onloadend = () => {
         if (typeof reader.result === 'string') {
@@ -113,17 +110,36 @@ export default function AdminDashboard() {
     setCreating(true);
     setFormMsg("");
 
-    const { data, error } = await supabase.from("products").insert([
-      {
+    const numericPrice = parseFloat(priceZAR);
+
+    // 1. Try publishing with price_zar
+    let insertPayload: any = {
+      name,
+      category,
+      region,
+      artisan_guild: artisan,
+      price_zar: numericPrice,
+      image_url: imageUrl,
+      provenance_story: provenance,
+    };
+
+    let { data, error } = await supabase.from("products").insert([insertPayload]).select();
+
+    // 2. Fallback to standard price column if price_zar is missing in cache
+    if (error && error.message.includes("price_zar")) {
+      insertPayload = {
         name,
         category,
         region,
         artisan_guild: artisan,
-        price_zar: parseFloat(priceZAR),
+        price: numericPrice,
         image_url: imageUrl,
         provenance_story: provenance,
-      },
-    ]).select();
+      };
+      const retry = await supabase.from("products").insert([insertPayload]).select();
+      data = retry.data;
+      error = retry.error;
+    }
 
     if (error) {
       setFormMsg(`Error publishing design: ${error.message}`);
@@ -228,7 +244,7 @@ export default function AdminDashboard() {
               required
               value={priceZAR}
               onChange={(e) => setPriceZAR(e.target.value)}
-              placeholder="6200"
+              placeholder="1750"
               className="mt-1 w-full px-3 py-2 border border-[#D99B26]/40 rounded-lg bg-[#FAF6F0] text-xs focus:outline-none"
             />
           </div>
@@ -300,7 +316,7 @@ export default function AdminDashboard() {
                     <p className="font-serif font-bold text-[#1C242B] text-sm">{prod.name}</p>
                     <p className="text-stone-500">{prod.region} • {prod.category || 'WOMEN'}</p>
                   </div>
-                  <span className="text-[#C85A32] font-bold text-sm">R{prod.price_zar}</span>
+                  <span className="text-[#C85A32] font-bold text-sm">R{prod.price_zar || prod.price}</span>
                 </div>
               ))}
             </div>
