@@ -1,202 +1,199 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useCart } from "@/lib/hooks/useCart";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
-import { formatPrice } from "@/lib/utils";
+import React, { useState } from "react";
+import Link from "next/link";
+import { useCartStore } from "@/lib/store";
 
 export default function CheckoutPage() {
-  const { items, total, clearCart } = useCart();
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    email: "",
-    firstName: "",
-    lastName: "",
-    address: "",
-    city: "",
-    country: "",
-    phone: "",
-  });
+  const { cart, currency, clearCart } = useCartStore();
+  const [email, setEmail] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [country, setCountry] = useState("South Africa");
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
-  useEffect(() => {
-    if (items.length === 0) {
-      router.replace("/cart");
-    }
-  }, [items.length, router]);
+  const subtotalZAR = cart.reduce(
+    (total, item) => total + item.priceZAR * item.quantity,
+    0
+  );
 
-  if (items.length === 0) {
-    return null;
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
+    setLoading(true);
+    setErrorMsg("");
 
     try {
-      const response = await fetch("/api/checkout", {
+      const res = await fetch("/api/checkout/paystack", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: formData.email,
-          amount: total,
-          metadata: {
-            cartItems: items,
-            customer: formData,
-          },
+          email,
+          amountZAR: subtotalZAR,
+          items: cart,
+          shippingAddress: { fullName, address, city, country },
         }),
       });
 
-      const data = await response.json();
+      const data = await res.json();
 
-      if (data.authorization_url) {
-        clearCart();
-        window.location.href = data.authorization_url;
-      } else {
-        throw new Error("Failed to initialize payment");
+      if (!res.ok) {
+        throw new Error(data.error || "Payment initialization failed.");
       }
-    } catch (error) {
-      console.error("Checkout error:", error);
-      alert("Payment initialization failed. Please try again.");
-    } finally {
-      setIsLoading(false);
+
+      // Redirect user to Paystack payment portal
+      window.location.href = data.authorization_url;
+    } catch (err: any) {
+      setErrorMsg(err.message || "An error occurred during checkout.");
+      setLoading(false);
     }
   };
 
+  if (cart.length === 0) {
+    return (
+      <main className="min-h-screen bg-stone-950 text-stone-100 flex flex-col justify-center items-center px-4">
+        <h2 className="text-2xl font-serif font-bold text-white mb-2">
+          Your Collector's Bag is Empty
+        </h2>
+        <p className="text-sm text-stone-400 mb-6">
+          Add artisanal items from the storefront before proceeding to checkout.
+        </p>
+        <Link
+          href="/"
+          className="px-6 py-3 bg-amber-400 text-stone-950 font-bold uppercase tracking-widest text-xs rounded hover:bg-amber-300 transition-colors"
+        >
+          Return to Storefront
+        </Link>
+      </main>
+    );
+  }
+
   return (
-    <main className="min-h-screen bg-[var(--cream)] pt-32 pb-20 px-6">
-      <div className="max-w-7xl mx-auto">
-        <h1 className="font-display text-5xl md:text-7xl text-[var(--charcoal)] uppercase mb-16 text-center">
-          Checkout
-        </h1>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+    <main className="min-h-screen bg-stone-950 text-stone-100 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Shipping Form */}
+        <div className="bg-stone-900 border border-stone-800 p-6 rounded-xl space-y-6">
           <div>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="bg-[var(--cream-dark)] p-8 border border-[var(--gold)]/10">
-                <h2 className="font-display text-xl uppercase tracking-widest mb-6 text-[var(--charcoal)]">
-                  Contact Information
-                </h2>
-                <input
-                  type="email"
-                  placeholder="Email"
-                  required
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full bg-transparent border-b border-[var(--charcoal)]/20 py-3 font-serif focus:border-[var(--gold)] focus:outline-none transition-colors placeholder:text-[var(--charcoal)]/40"
-                />
-              </div>
-
-              <div className="bg-[var(--cream-dark)] p-8 border border-[var(--gold)]/10">
-                <h2 className="font-display text-xl uppercase tracking-widest mb-6 text-[var(--charcoal)]">
-                  Shipping Address
-                </h2>
-                <div className="grid grid-cols-2 gap-4 mb-4">
-                  <input
-                    type="text"
-                    placeholder="First Name"
-                    required
-                    value={formData.firstName}
-                    onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                    className="w-full bg-transparent border-b border-[var(--charcoal)]/20 py-3 font-serif focus:border-[var(--gold)] focus:outline-none transition-colors placeholder:text-[var(--charcoal)]/40"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Last Name"
-                    required
-                    value={formData.lastName}
-                    onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                    className="w-full bg-transparent border-b border-[var(--charcoal)]/20 py-3 font-serif focus:border-[var(--gold)] focus:outline-none transition-colors placeholder:text-[var(--charcoal)]/40"
-                  />
-                </div>
-                <input
-                  type="text"
-                  placeholder="Address"
-                  required
-                  value={formData.address}
-                  onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                  className="w-full bg-transparent border-b border-[var(--charcoal)]/20 py-3 font-serif focus:border-[var(--gold)] focus:outline-none transition-colors placeholder:text-[var(--charcoal)]/40 mb-4"
-                />
-                <div className="grid grid-cols-2 gap-4 mb-4">
-                  <input
-                    type="text"
-                    placeholder="City"
-                    required
-                    value={formData.city}
-                    onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                    className="w-full bg-transparent border-b border-[var(--charcoal)]/20 py-3 font-serif focus:border-[var(--gold)] focus:outline-none transition-colors placeholder:text-[var(--charcoal)]/40"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Country"
-                    required
-                    value={formData.country}
-                    onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-                    className="w-full bg-transparent border-b border-[var(--charcoal)]/20 py-3 font-serif focus:border-[var(--gold)] focus:outline-none transition-colors placeholder:text-[var(--charcoal)]/40"
-                  />
-                </div>
-                <input
-                  type="tel"
-                  placeholder="Phone"
-                  required
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="w-full bg-transparent border-b border-[var(--charcoal)]/20 py-3 font-serif focus:border-[var(--gold)] focus:outline-none transition-colors placeholder:text-[var(--charcoal)]/40"
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full bg-[var(--gold)] text-[var(--charcoal)] py-5 font-display tracking-widest text-sm hover:bg-[var(--charcoal)] hover:text-[var(--cream)] transition-colors disabled:opacity-70"
-              >
-                {isLoading ? "PROCESSING..." : `PAY ${formatPrice(total)}`}
-              </button>
-            </form>
+            <span className="text-xs uppercase tracking-widest text-amber-400 font-mono">
+              Secure Delivery
+            </span>
+            <h1 className="text-2xl font-serif font-bold text-white mt-1">
+              Shipping Information
+            </h1>
           </div>
 
-          <div className="lg:pl-12">
-            <div className="bg-[var(--charcoal)] p-8 text-[var(--cream)] sticky top-32">
-              <h2 className="font-display text-2xl uppercase tracking-widest mb-8">
-                Order Summary
-              </h2>
+          <form onSubmit={handleCheckout} className="space-y-4">
+            <div>
+              <label className="block text-xs uppercase tracking-widest text-stone-300 font-medium">
+                Email Address
+              </label>
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="collector@origin54.com"
+                className="mt-1 block w-full px-3 py-2 border border-stone-700 rounded-md bg-stone-950 text-white focus:outline-none focus:ring-amber-500 sm:text-sm"
+              />
+            </div>
 
-              <div className="space-y-4 mb-8">
-                {items.map((item) => (
-                  <div key={item.id} className="flex gap-4 items-center">
-                    <div className="relative w-16 h-20 bg-[var(--cream)]/10 overflow-hidden">
-                      <Image
-                        src={item.image_url}
-                        alt={item.name}
-                        fill
-                        className="object-cover"
-                        sizes="64px"
-                      />
-                      <span className="absolute -top-2 -right-2 w-5 h-5 bg-[var(--gold)] text-[var(--charcoal)] text-xs flex items-center justify-center font-display">
-                        {item.quantity}
-                      </span>
-                    </div>
-                    <div className="flex-grow">
-                      <p className="font-display text-sm uppercase">{item.name}</p>
-                      <p className="font-serif text-xs text-[var(--cream)]/60">
-                        {formatPrice(item.price)} × {item.quantity}
-                      </p>
-                    </div>
-                    <p className="font-display text-sm">
-                      {formatPrice(item.price * item.quantity)}
-                    </p>
-                  </div>
-                ))}
+            <div>
+              <label className="block text-xs uppercase tracking-widest text-stone-300 font-medium">
+                Full Name
+              </label>
+              <input
+                type="text"
+                required
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                placeholder="Kofi Mensah"
+                className="mt-1 block w-full px-3 py-2 border border-stone-700 rounded-md bg-stone-950 text-white focus:outline-none focus:ring-amber-500 sm:text-sm"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs uppercase tracking-widest text-stone-300 font-medium">
+                Street Address
+              </label>
+              <input
+                type="text"
+                required
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                placeholder="1073 Kwa-Guqa Main Rd"
+                className="mt-1 block w-full px-3 py-2 border border-stone-700 rounded-md bg-stone-950 text-white focus:outline-none focus:ring-amber-500 sm:text-sm"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs uppercase tracking-widest text-stone-300 font-medium">
+                  City
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  placeholder="eMalahleni"
+                  className="mt-1 block w-full px-3 py-2 border border-stone-700 rounded-md bg-stone-950 text-white focus:outline-none focus:ring-amber-500 sm:text-sm"
+                />
               </div>
 
-              <div className="h-[1px] bg-[var(--gold)]/30 my-6" />
-
-              <div className="flex justify-between font-display text-xl">
-                <span>Total</span>
-                <span className="text-[var(--gold)]">{formatPrice(total)}</span>
+              <div>
+                <label className="block text-xs uppercase tracking-widest text-stone-300 font-medium">
+                  Country
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                  className="mt-1 block w-full px-3 py-2 border border-stone-700 rounded-md bg-stone-950 text-white focus:outline-none focus:ring-amber-500 sm:text-sm"
+                />
               </div>
             </div>
+
+            {errorMsg && (
+              <p className="text-xs text-red-400 font-mono text-center">{errorMsg}</p>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-3 bg-amber-400 text-stone-950 text-center text-xs uppercase tracking-widest font-semibold rounded hover:bg-amber-300 transition-colors mt-4"
+            >
+              {loading ? "Initializing Paystack..." : "Proceed to Paystack"}
+            </button>
+          </form>
+        </div>
+
+        {/* Order Summary */}
+        <div className="bg-stone-900 border border-stone-800 p-6 rounded-xl space-y-6 h-fit">
+          <h2 className="text-xl font-serif font-bold text-white border-b border-stone-800 pb-4">
+            Order Summary
+          </h2>
+
+          <div className="space-y-4">
+            {cart.map((item) => (
+              <div key={item.id} className="flex justify-between items-center text-sm">
+                <div>
+                  <p className="font-semibold text-stone-200">{item.name}</p>
+                  <p className="text-xs text-stone-400">Qty: {item.quantity}</p>
+                </div>
+                <p className="font-mono text-amber-400">
+                  R{(item.priceZAR * item.quantity).toFixed(2)}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div className="border-t border-stone-800 pt-4 flex justify-between items-center font-mono">
+            <span className="text-xs uppercase text-stone-400">Total (ZAR):</span>
+            <span className="text-xl font-bold text-amber-400">
+              R{subtotalZAR.toFixed(2)}
+            </span>
           </div>
         </div>
       </div>
