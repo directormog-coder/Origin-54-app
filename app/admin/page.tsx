@@ -61,7 +61,6 @@ export default function AdminDashboard() {
     checkAdminAndFetch();
   }, [router, supabase]);
 
-  // Handle direct image file upload from phone gallery
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -73,25 +72,23 @@ export default function AdminDashboard() {
     const fileName = `${Date.now()}.${fileExt}`;
     const filePath = `product-images/${fileName}`;
 
-    // Upload to Supabase 'products' bucket
     const { error } = await supabase.storage
       .from('products')
       .upload(filePath, file);
 
     if (error) {
-      setFormMsg(`Upload failed: ${error.message}. Ensure 'products' bucket is created in Supabase.`);
+      setFormMsg(`Upload failed: ${error.message}`);
       setUploading(false);
       return;
     }
 
-    // Get public URL
     const { data: publicUrlData } = supabase.storage
       .from('products')
       .getPublicUrl(filePath);
 
     if (publicUrlData?.publicUrl) {
       setImageUrl(publicUrlData.publicUrl);
-      setFormMsg("Image uploaded successfully from gallery!");
+      setFormMsg("Image uploaded successfully!");
     }
 
     setUploading(false);
@@ -110,9 +107,7 @@ export default function AdminDashboard() {
         artisan_guild: artisan,
         price_zar: parseFloat(priceZAR),
         image_url: imageUrl,
-        image: imageUrl,
         provenance_story: provenance,
-        description: provenance,
       },
     ]).select();
 
@@ -194,7 +189,22 @@ export default function AdminDashboard() {
                 onChange={(e) => setRegion(e.target.value)}
                 className="mt-1 w-full px-2 py-2 border border-[#D99B26]/40 rounded-lg bg-[#FAF6F0] text-xs focus:outline-none"
               >
-    />
+                {REGIONS.map((reg) => (
+                  <option key={reg} value={reg}>{reg}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs uppercase font-mono font-semibold text-[#1C242B]">Artisan / Guild</label>
+            <input
+              type="text"
+              value={artisan}
+              onChange={(e) => setArtisan(e.target.value)}
+              placeholder="e.g., ORIGIN 54 Master Tailors"
+              className="mt-1 w-full px-3 py-2 border border-[#D99B26]/40 rounded-lg bg-[#FAF6F0] text-xs focus:outline-none"
+            />
           </div>
 
           <div>
@@ -209,7 +219,6 @@ export default function AdminDashboard() {
             />
           </div>
 
-          {/* Direct File Picker */}
           <div>
             <label className="block text-xs uppercase font-mono font-semibold text-[#1C242B]">
               Upload Design Photo from Phone
