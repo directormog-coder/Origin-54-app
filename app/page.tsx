@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase";
 
-export const revalidate = 0; // Ensure live database catalog updates on request
+export const revalidate = 0;
 
 export default async function HomePage() {
   const supabase = createClient();
@@ -44,25 +44,30 @@ export default async function HomePage() {
   const displayProducts = dbProducts && dbProducts.length > 0 ? dbProducts : fallbackProducts;
 
   return (
-    <main className="min-h-screen bg-stone-950 text-stone-100">
-      {/* Hero Banner */}
-      <section className="relative h-[80vh] flex items-center justify-center border-b border-stone-800 bg-gradient-to-b from-stone-900 to-stone-950 px-4">
+    <main className="min-h-screen bg-[#FAF6F0] text-[#1C242B]">
+      {/* Hero Banner with Authentic African Canvas Aesthetics */}
+      <section className="relative py-20 px-4 sm:px-6 lg:px-8 border-b border-[#D99B26]/30 bg-gradient-to-b from-[#F4EFE6] to-[#FAF6F0]">
         <div className="max-w-4xl mx-auto text-center space-y-6">
-          <span className="text-xs uppercase tracking-[0.3em] text-amber-400 font-mono">
-            Pan-African Luxury E-Commerce
-          </span>
-          <h1 className="text-4xl md:text-6xl font-serif font-black text-white tracking-tight leading-tight">
+          <div className="inline-block border-y-2 border-[#D99B26] py-1 px-4">
+            <span className="text-xs uppercase tracking-[0.3em] text-[#C85A32] font-semibold">
+              Pan-African Luxury E-Commerce
+            </span>
+          </div>
+          
+          <h1 className="text-4xl md:text-6xl font-serif font-black text-[#1C242B] tracking-tight leading-tight">
             Bridging Continental Craftsmanship with the Global Diaspora
           </h1>
-          <p className="text-sm md:text-base text-stone-300 max-w-2xl mx-auto leading-relaxed">
+          
+          <p className="text-base md:text-lg text-[#1C242B]/80 max-w-2xl mx-auto font-serif leading-relaxed">
             Curated, provenance-verified luxury heritage pieces crafted by master artisan guilds across Africa.
           </p>
-          <div className="pt-4 flex justify-center gap-4">
+
+          <div className="pt-6">
             <a
               href="#catalog"
-              className="px-8 py-3.5 bg-amber-400 text-stone-950 font-bold uppercase tracking-widest text-xs rounded hover:bg-amber-300 transition-colors shadow-xl"
+              className="inline-block px-8 py-3.5 bg-[#C85A32] text-white font-bold uppercase tracking-widest text-xs rounded-full hover:bg-[#B84A22] transition-all shadow-md hover:shadow-lg"
             >
-              Explore Collection
+              Explore The Asili Vault
             </a>
           </div>
         </div>
@@ -70,17 +75,17 @@ export default async function HomePage() {
 
       {/* Dynamic Product Catalog Section */}
       <section id="catalog" className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8 space-y-8">
-        <div className="flex justify-between items-end border-b border-stone-800 pb-4">
+        <div className="flex justify-between items-end border-b-2 border-[#D99B26] pb-4">
           <div>
-            <span className="text-xs uppercase tracking-widest text-amber-400 font-mono">
-              The Asili Vault
+            <span className="text-xs uppercase tracking-widest text-[#C85A32] font-semibold">
+              Authentic African Heritage
             </span>
-            <h2 className="text-2xl md:text-3xl font-serif font-bold text-white mt-1">
-              Curated Heritage Pieces
+            <h2 className="text-2xl md:text-4xl font-serif font-bold text-[#1C242B] mt-1">
+              The Asili Vault
             </h2>
           </div>
-          <span className="text-xs font-mono text-stone-400">
-            {displayProducts.length} Pieces Live
+          <span className="text-xs font-mono text-[#C85A32] bg-[#D99B26]/10 border border-[#D99B26]/30 px-3 py-1 rounded-full">
+            {displayProducts.length} Live Pieces
           </span>
         </div>
 
@@ -89,10 +94,10 @@ export default async function HomePage() {
             <Link
               key={product.id}
               href={`/product/${product.id}`}
-              className="group bg-stone-900 border border-stone-800 rounded-xl overflow-hidden hover:border-amber-400/50 transition-all duration-300 shadow-xl flex flex-col justify-between"
+              className="group bg-white border border-[#D99B26]/30 rounded-2xl overflow-hidden hover:border-[#C85A32] transition-all duration-300 shadow-sm hover:shadow-xl flex flex-col justify-between"
             >
               <div>
-                <div className="relative aspect-square w-full bg-stone-950 overflow-hidden">
+                <div className="relative aspect-square w-full bg-[#F4EFE6] overflow-hidden">
                   <Image
                     src={product.image}
                     alt={product.name}
@@ -100,21 +105,26 @@ export default async function HomePage() {
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 </div>
-                <div className="p-5 space-y-2">
-                  <span className="text-[10px] uppercase tracking-widest text-amber-400 font-mono">
+                <div className="p-6 space-y-2">
+                  <span className="text-[10px] uppercase tracking-widest text-[#C85A32] font-bold">
                     {product.region}
                   </span>
-                  <h3 className="text-lg font-serif font-bold text-white group-hover:text-amber-300 transition-colors">
+                  <h3 className="text-xl font-serif font-bold text-[#1C242B] group-hover:text-[#C85A32] transition-colors">
                     {product.name}
                   </h3>
-                  <p className="text-xs text-stone-400 font-serif">
+                  <p className="text-xs text-[#1C242B]/70 font-serif italic">
                     Guild: {product.artisan}
                   </p>
                 </div>
               </div>
-              <div className="p-5 pt-0 border-t border-stone-800/50 flex justify-between items-center font-mono text-xs">
-                <span className="text-stone-400">Investment:</span>
-                <span className="text-amber-400 font-bold">R{product.price_zar}</span>
+              
+              <div className="p-6 pt-0 border-t border-[#F4EFE6] flex justify-between items-center font-mono text-xs mt-4">
+                <span className="text-[#1C242B]/60 uppercase tracking-wider text-[11px]">
+                  Investment:
+                </span>
+                <span className="text-[#C85A32] font-extrabold text-sm">
+                  R{product.price_zar}
+                </span>
               </div>
             </Link>
           ))}
