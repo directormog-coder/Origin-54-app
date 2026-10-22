@@ -21,6 +21,7 @@ export default function AdminDashboard() {
   const [imageUrl, setImageUrl] = useState("");
   const [provenance, setProvenance] = useState("");
   const [creating, setCreating] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [formMsg, setFormMsg] = useState("");
 
   const supabase = createClient();
@@ -59,6 +60,42 @@ export default function AdminDashboard() {
 
     checkAdminAndFetch();
   }, [router, supabase]);
+
+  // Handle direct image file upload from phone gallery
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    setFormMsg("");
+
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Date.now()}.${fileExt}`;
+    const filePath = `product-images/${fileName}`;
+
+    // Upload to Supabase 'products' bucket
+    const { data, error } = await supabase.storage
+      .from('products')
+      .upload(filePath, file);
+
+    if (error) {
+      setFormMsg(`Upload failed: ${error.message}. Make sure the 'products' bucket is created in Supabase.`);
+      setUploading(false);
+      return;
+    }
+
+    // Get public URL
+    const { data: publicUrlData } = supabase.storage
+      .from('products')
+      .getPublicUrl(filePath);
+
+    if (publicUrlData?.publicUrl) {
+      setImageUrl(publicUrlData.publicUrl);
+      setFormMsg("Image uploaded successfully from gallery!");
+    }
+
+    setUploading(false);
+  };
 
   const handlePublish = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -133,7 +170,7 @@ export default function AdminDashboard() {
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="e.g., Terracotta & Ebony Trench Set"
+              placeholder="e.g., Forest Green Bomber & Skirt"
               className="mt-1 w-full px-3 py-2 border border-[#D99B26]/40 rounded-lg bg-[#FAF6F0] text-xs focus:ring-2 focus:ring-[#C85A32] focus:outline-none"
             />
           </div>
@@ -156,9 +193,8 @@ export default function AdminDashboard() {
               <select
                 value={region}
                 onChange={(e) => setRegion(e.target.value)}
-                className="mt-1 w-full px-2 py-2 border border-[#D99B26]/40 rounded-lg bg-[#FAF6F0] text-xs focus:outline-none"
-              >
-                {REGIONS.map((reg) => (
+                className="mt-1 w-full px-2 py-2 border border-[#D99B26]/40 rounded-lg bg-[#FAF6F0] text-xs focus:outline
+ {REGIONS.map((reg) => (
                   <option key={reg} value={reg}>{reg}</option>
                 ))}
               </select>
@@ -171,7 +207,7 @@ export default function AdminDashboard() {
               type="text"
               value={artisan}
               onChange={(e) => setArtisan(e.target.value)}
-              placeholder="e.g., Kente Master Weavers"
+              placeholder="e.g., ORIGIN 54 Master Tailors"
               className="mt-1 w-full px-3 py-2 border border-[#D99B26]/40 rounded-lg bg-[#FAF6F0] text-xs focus:outline-none"
             />
           </div>
@@ -183,19 +219,33 @@ export default function AdminDashboard() {
               required
               value={priceZAR}
               onChange={(e) => setPriceZAR(e.target.value)}
-              placeholder="5800"
+              placeholder="6200"
               className="mt-1 w-full px-3 py-2 border border-[#D99B26]/40 rounded-lg bg-[#FAF6F0] text-xs focus:outline-none"
             />
           </div>
 
+          {/* Direct File Picker */}
           <div>
-            <label className="block text-xs uppercase font-mono font-semibold text-[#1C242B]">Image URL</label>
+            <label className="block text-xs uppercase font-mono font-semibold text-[#1C242B]">
+              Upload Design Photo from Phone
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileUpload}
+              className="mt-1 w-full text-xs font-mono file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#D99B26] file:text-[#1C242B] hover:file:bg-[#c38a1e] file:cursor-pointer"
+            />
+            {uploading && <p className="text-[10px] font-mono text-[#C85A32] mt-1">Uploading image...</p>}
+          </div>
+
+          <div>
+            <label className="block text-xs uppercase font-mono font-semibold text-[#1C242B]">Image URL (Auto-filled)</label>
             <input
               type="url"
               required
               value={imageUrl}
               onChange={(e) => setImageUrl(e.target.value)}
-              placeholder="https://..."
+              placeholder="Upload image or paste link..."
               className="mt-1 w-full px-3 py-2 border border-[#D99B26]/40 rounded-lg bg-[#FAF6F0] text-xs focus:outline-none"
             />
           </div>
@@ -218,8 +268,8 @@ export default function AdminDashboard() {
 
           <button
             type="submit"
-            disabled={creating}
-            className="w-full py-3 bg-[#C85A32] text-white font-bold uppercase tracking-widest text-xs rounded-lg hover:bg-[#B84A22] transition-colors"
+            disabled={creating || uploading}
+            className="w-full py-3 bg-[#C85A32] text-white font-bold uppercase tracking-widest text-xs rounded-lg hover:bg-[#B84A22] transition-colors disabled:opacity-50"
           >
             {creating ? "Publishing..." : "Publish to Vault Catalog"}
           </button>
@@ -232,7 +282,7 @@ export default function AdminDashboard() {
 
           {products.length === 0 ? (
             <p className="text-stone-500 text-xs font-mono py-6">
-              No designs published in the database yet. Use the form to add your first piece!
+              No designs published in the database yet. Select a photo from your phone gallery to publish!
             </p>
           ) : (
             <div className="space-y-3">
