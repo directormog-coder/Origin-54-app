@@ -112,31 +112,27 @@ export default function AdminDashboard() {
 
     const numericPrice = parseFloat(priceZAR);
 
-    // 1. Try publishing with price_zar
-    let insertPayload: any = {
+    // Full payload with all fields
+    let payload: any = {
       name,
       category,
       region,
       artisan_guild: artisan,
       price_zar: numericPrice,
+      price: numericPrice,
       image_url: imageUrl,
+      image: imageUrl,
       provenance_story: provenance,
+      description: provenance,
     };
 
-    let { data, error } = await supabase.from("products").insert([insertPayload]).select();
+    let { data, error } = await supabase.from("products").insert([payload]).select();
 
-    // 2. Fallback to standard price column if price_zar is missing in cache
-    if (error && error.message.includes("price_zar")) {
-      insertPayload = {
-        name,
-        category,
-        region,
-        artisan_guild: artisan,
-        price: numericPrice,
-        image_url: imageUrl,
-        provenance_story: provenance,
-      };
-      const retry = await supabase.from("products").insert([insertPayload]).select();
+    // If region or price_zar column cache error occurs, strip them dynamically and retry
+    if (error && (error.message.includes("region") || error.message.includes("price_zar"))) {
+      delete payload.region;
+      delete payload.price_zar;
+      const retry = await supabase.from("products").insert([payload]).select();
       data = retry.data;
       error = retry.error;
     }
@@ -314,7 +310,7 @@ export default function AdminDashboard() {
                 <div key={prod.id} className="flex justify-between items-center border border-[#D99B26]/30 bg-[#FAF6F0] p-4 rounded-xl text-xs font-mono">
                   <div>
                     <p className="font-serif font-bold text-[#1C242B] text-sm">{prod.name}</p>
-                    <p className="text-stone-500">{prod.region} • {prod.category || 'WOMEN'}</p>
+                    <p className="text-stone-500">{prod.region || 'Southern Africa'} • {prod.category || 'WOMEN'}</p>
                   </div>
                   <span className="text-[#C85A32] font-bold text-sm">R{prod.price_zar || prod.price}</span>
                 </div>
