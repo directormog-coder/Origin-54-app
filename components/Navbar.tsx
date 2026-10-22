@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase";
 
 export default function Navbar() {
@@ -30,19 +31,25 @@ export default function Navbar() {
   }, [supabase]);
 
   return (
-    <header className="sticky top-0 z-50 bg-[#FAF6F0] border-b border-[#D99B26]/30 shadow-sm font-sans">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex justify-between items-center">
+    <header className="sticky top-0 z-50 bg-[#FAF6F0] border-b-2 border-[#D99B26]/40 shadow-sm font-sans">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-24 flex justify-between items-center">
         
-        {/* Brand Logo & Name */}
+        {/* Official Brand Logo Image from public/icon.png */}
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 rounded-full border-2 border-[#D99B26] flex items-center justify-center bg-[#FAF6F0] shadow-inner">
-            <span className="font-serif font-bold text-base text-[#D99B26]">54</span>
+          <div className="relative w-14 h-14 rounded-full border-2 border-[#D99B26] overflow-hidden bg-white shadow-md group-hover:scale-105 transition-transform flex-shrink-0">
+            <Image
+              src="/icon.png"
+              alt="ORIGIN 54 — The Asili Collective Logo"
+              fill
+              priority
+              className="object-cover p-1"
+            />
           </div>
           <div className="flex flex-col">
-            <span className="font-serif font-black text-xl tracking-tight text-[#1C242B]">
+            <span className="font-serif font-black text-2xl tracking-tight text-[#1C242B]">
               ORIGIN 54
             </span>
-            <span className="font-serif italic text-xs text-[#C85A32] tracking-wide -mt-1">
+            <span className="font-serif italic text-xs text-[#C85A32] tracking-wide -mt-1 font-bold">
               The Asili Collective
             </span>
           </div>
@@ -50,23 +57,26 @@ export default function Navbar() {
 
         {/* Navigation Links */}
         <nav className="hidden md:flex items-center space-x-8 text-xs font-semibold uppercase tracking-wider text-[#1C242B]">
+          <Link href="/#categories" className="hover:text-[#C85A32] transition-colors">
+            Categories
+          </Link>
           <Link href="/#catalog" className="hover:text-[#C85A32] transition-colors">
-            Vault Collection
+            Vault Catalog
           </Link>
           <Link href="/artisans" className="hover:text-[#C85A32] transition-colors">
             Artisans & Guilds
           </Link>
           <Link href="/about" className="hover:text-[#C85A32] transition-colors">
-            Our Heritage
+            Our Story
           </Link>
         </nav>
 
-        {/* User Account / Admin / Profile Controls */}
+        {/* User Profile & Director Controls */}
         <div className="flex items-center space-x-4">
           {isAdmin && (
             <Link
               href="/admin"
-              className="px-3 py-1.5 bg-[#C85A32] text-white text-xs uppercase tracking-wider font-bold rounded shadow hover:bg-[#B84A22] transition-colors"
+              className="px-3.5 py-2 bg-[#C85A32] text-white text-xs uppercase tracking-wider font-bold rounded-lg shadow hover:bg-[#B84A22] transition-colors"
             >
               Director Portal
             </Link>
@@ -75,14 +85,14 @@ export default function Navbar() {
           {user ? (
             <Link
               href="/account"
-              className="px-3 py-1.5 border border-[#D99B26] text-[#1C242B] text-xs uppercase tracking-wider font-bold rounded hover:bg-[#D99B26]/10 transition-colors"
+              className="px-3.5 py-2 border-2 border-[#D99B26] text-[#1C242B] text-xs uppercase tracking-wider font-bold rounded-lg hover:bg-[#D99B26]/10 transition-colors"
             >
               My Profile
             </Link>
           ) : (
             <Link
               href="/login"
-              className="px-4 py-2 bg-[#D99B26] text-[#1C242B] text-xs uppercase tracking-wider font-bold rounded shadow hover:bg-[#c38a1e] transition-colors"
+              className="px-4 py-2.5 bg-[#D99B26] text-[#1C242B] text-xs uppercase tracking-wider font-bold rounded-lg shadow hover:bg-[#c38a1e] transition-colors"
             >
               Sign In / Profile
             </Link>
@@ -99,7 +109,7 @@ export default function Navbar() {
               viewBox="0 0 24 24"
               strokeWidth={1.8}
               stroke="currentColor"
-              className="w-6 h-6"
+              className="w-7 h-7"
             >
               <path
                 strokeLinecap="round"
