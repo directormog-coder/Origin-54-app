@@ -110,32 +110,22 @@ export default function AdminDashboard() {
     setCreating(true);
     setFormMsg("");
 
-    const numericPrice = parseFloat(priceZAR);
+    const numericPrice = parseFloat(priceZAR) || 0;
 
-    // Full payload with all fields
-    let payload: any = {
+    const payload = {
       name,
       category,
       region,
       artisan_guild: artisan,
-      price_zar: numericPrice,
       price: numericPrice,
+      price_zar: numericPrice,
       image_url: imageUrl,
       image: imageUrl,
       provenance_story: provenance,
       description: provenance,
     };
 
-    let { data, error } = await supabase.from("products").insert([payload]).select();
-
-    // If region or price_zar column cache error occurs, strip them dynamically and retry
-    if (error && (error.message.includes("region") || error.message.includes("price_zar"))) {
-      delete payload.region;
-      delete payload.price_zar;
-      const retry = await supabase.from("products").insert([payload]).select();
-      data = retry.data;
-      error = retry.error;
-    }
+    const { data, error } = await supabase.from("products").insert([payload]).select();
 
     if (error) {
       setFormMsg(`Error publishing design: ${error.message}`);
@@ -312,7 +302,7 @@ export default function AdminDashboard() {
                     <p className="font-serif font-bold text-[#1C242B] text-sm">{prod.name}</p>
                     <p className="text-stone-500">{prod.region || 'Southern Africa'} • {prod.category || 'WOMEN'}</p>
                   </div>
-                  <span className="text-[#C85A32] font-bold text-sm">R{prod.price_zar || prod.price}</span>
+                  <span className="text-[#C85A32] font-bold text-sm">R{prod.price || prod.price_zar}</span>
                 </div>
               ))}
             </div>
