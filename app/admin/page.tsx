@@ -61,6 +61,7 @@ export default function AdminDashboard() {
     checkAdminAndFetch();
   }, [router, supabase]);
 
+  // Handle direct file selection from mobile gallery
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -68,30 +69,43 @@ export default function AdminDashboard() {
     setUploading(true);
     setFormMsg("");
 
-    const fileExt = file.name.split('.').pop();
-    const fileName = `${Date.now()}.${fileExt}`;
-    const filePath = `product-images/${fileName}`;
+    try {
+      // 1. Try uploading to Supabase Storage
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}.${fileExt}`;
+      const filePath = `product-images/${fileName}`;
 
-    const { error } = await supabase.storage
-      .from('products')
-      .upload(filePath, file);
+      const { error: uploadErr } = await supabase.storage
+        .from('products')
+        .upload(filePath, file, { upsert: true });
 
-    if (error) {
-      setFormMsg(`Upload failed: ${error.message}`);
+      if (!uploadErr) {
+        const { data: publicUrlData } = supabase.storage
+          .from('products')
+          .getPublicUrl(filePath);
+
+        if (publicUrlData?.publicUrl) {
+          setImageUrl(publicUrlData.publicUrl);
+          setFormMsg("Image uploaded successfully to Storage!");
+          setUploading(false);
+          return;
+        }
+      }
+
+      // 2. Fallback: Convert to Data URL (Base64) if storage fetch is blocked
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (typeof reader.result === 'string') {
+          setImageUrl(reader.result);
+          setFormMsg("Photo loaded successfully from device!");
+        }
+        setUploading(false);
+      };
+      reader.readAsDataURL(file);
+    } catch (err: any) {
+      setFormMsg(`Upload error: ${err.message}`);
       setUploading(false);
-      return;
     }
-
-    const { data: publicUrlData } = supabase.storage
-      .from('products')
-      .getPublicUrl(filePath);
-
-    if (publicUrlData?.publicUrl) {
-      setImageUrl(publicUrlData.publicUrl);
-      setFormMsg("Image uploaded successfully!");
-    }
-
-    setUploading(false);
   };
 
   const handlePublish = async (e: React.FormEvent) => {
@@ -229,18 +243,18 @@ export default function AdminDashboard() {
               onChange={handleFileUpload}
               className="mt-1 w-full text-xs font-mono file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#D99B26] file:text-[#1C242B] hover:file:bg-[#c38a1e] file:cursor-pointer"
             />
-            {uploading && <p className="text-[10px] font-mono text-[#C85A32] mt-1">Uploading image...</p>}
+            {uploading && <p className="text-[10px] font-mono text-[#C85A32] mt-1">Processing photo...</p>}
           </div>
 
           <div>
             <label className="block text-xs uppercase font-mono font-semibold text-[#1C242B]">Image URL (Auto-filled)</label>
             <input
-              type="url"
+              type="text"
               required
               value={imageUrl}
               onChange={(e) => setImageUrl(e.target.value)}
-              placeholder="Upload image or paste link..."
-              className="mt-1 w-full px-3 py-2 border border-[#D99B26]/40 rounded-lg bg-[#FAF6F0] text-xs focus:outline-none"
+              placeholder="Photo link will populate automatically..."
+              className="mt-1 w-full px-3 py-2 border border-[#D99B26]/40 rounded-lg bg-[#FAF6F0] text-xs focus:outline-none font-mono text-[10px]"
             />
           </div>
 
@@ -262,7 +276,7 @@ export default function AdminDashboard() {
 
           <button
             type="submit"
-            disabled={creating || uploading}
+            disabled={creating || uploading || !imageUrl}
             className="w-full py-3 bg-[#C85A32] text-white font-bold uppercase tracking-widest text-xs rounded-lg hover:bg-[#B84A22] transition-colors disabled:opacity-50"
           >
             {creating ? "Publishing..." : "Publish to Vault Catalog"}
