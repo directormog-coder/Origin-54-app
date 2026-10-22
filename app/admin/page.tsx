@@ -74,12 +74,12 @@ export default function AdminDashboard() {
     const filePath = `product-images/${fileName}`;
 
     // Upload to Supabase 'products' bucket
-    const { data, error } = await supabase.storage
+    const { error } = await supabase.storage
       .from('products')
       .upload(filePath, file);
 
     if (error) {
-      setFormMsg(`Upload failed: ${error.message}. Make sure the 'products' bucket is created in Supabase.`);
+      setFormMsg(`Upload failed: ${error.message}. Ensure 'products' bucket is created in Supabase.`);
       setUploading(false);
       return;
     }
@@ -108,7 +108,6 @@ export default function AdminDashboard() {
         category,
         region,
         artisan_guild: artisan,
-        artisan,
         price_zar: parseFloat(priceZAR),
         image_url: imageUrl,
         image: imageUrl,
@@ -193,23 +192,9 @@ export default function AdminDashboard() {
               <select
                 value={region}
                 onChange={(e) => setRegion(e.target.value)}
-                className="mt-1 w-full px-2 py-2 border border-[#D99B26]/40 rounded-lg bg-[#FAF6F0] text-xs focus:outline
- {REGIONS.map((reg) => (
-                  <option key={reg} value={reg}>{reg}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-xs uppercase font-mono font-semibold text-[#1C242B]">Artisan / Guild</label>
-            <input
-              type="text"
-              value={artisan}
-              onChange={(e) => setArtisan(e.target.value)}
-              placeholder="e.g., ORIGIN 54 Master Tailors"
-              className="mt-1 w-full px-3 py-2 border border-[#D99B26]/40 rounded-lg bg-[#FAF6F0] text-xs focus:outline-none"
-            />
+                className="mt-1 w-full px-2 py-2 border border-[#D99B26]/40 rounded-lg bg-[#FAF6F0] text-xs focus:outline-none"
+              >
+    />
           </div>
 
           <div>
