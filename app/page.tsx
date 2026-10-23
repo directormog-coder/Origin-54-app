@@ -7,11 +7,33 @@ import { createClient } from "@/lib/supabase";
 export default function Home() {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+
   const supabase = createClient();
 
   useEffect(() => {
-    async function fetchVaultProducts() {
-      const { data, error } = await supabase
+    async function checkAuthAndFetchProducts() {
+      // 1. Check logged in user status
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (user) {
+        setUserEmail(user.email || null);
+
+        // Check profiles table for is_admin flag or director email
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("is_admin")
+          .eq("id", user.id)
+          .single();
+
+        if (profile?.is_admin || user.email === "director.origin54@gmail.com") {
+          setIsAdmin(true);
+        }
+      }
+
+      // 2. Fetch Vault Products
+      const { data } = await supabase
         .from("products")
         .select("*")
         .order("created_at", { ascending: false });
@@ -20,12 +42,12 @@ export default function Home() {
       setLoading(false);
     }
 
-    fetchVaultProducts();
+    checkAuthAndFetchProducts();
   }, [supabase]);
 
   return (
     <main className="min-h-screen bg-[#FAF6F0] text-[#1C242B]">
-      {/* Header / Nav */}
+      {/* Clean Single Navigation Header */}
       <header className="sticky top-0 z-50 bg-[#FAF6F0]/90 backdrop-blur-md border-b border-[#D99B26]/30 px-4 py-3 flex justify-between items-center max-w-7xl mx-auto">
         <Link href="/" className="flex items-center gap-2">
           <div className="w-10 h-10 rounded-full border border-[#D99B26] overflow-hidden flex items-center justify-center bg-white">
@@ -38,17 +60,21 @@ export default function Home() {
         </Link>
 
         <div className="flex items-center gap-3">
-          <Link
-            href="/admin"
-            className="text-xs font-mono bg-[#C85A32] text-white font-bold px-3 py-1.5 rounded-lg hover:bg-[#B84A22] transition-colors"
-          >
-            DIRECTOR PORTAL
-          </Link>
+          {/* ONLY SHOWN TO VERIFIED DIRECTOR */}
+          {isAdmin && (
+            <Link
+              href="/admin"
+              className="text-xs font-mono bg-[#C85A32] text-white font-bold px-3 py-1.5 rounded-lg hover:bg-[#B84A22] transition-colors"
+            >
+              DIRECTOR PORTAL
+            </Link>
+          )}
+
           <Link
             href="/account"
             className="text-xs font-mono border border-[#D99B26] text-[#1C242B] font-bold px-3 py-1.5 rounded-lg hover:bg-[#D99B26]/10 transition-colors"
           >
-            MY PROFILE
+            {userEmail ? "MY PROFILE" : "SIGN IN"}
           </Link>
         </div>
       </header>
@@ -94,7 +120,6 @@ export default function Home() {
                       alt={prod.name}
                       className="w-full h-full object-cover object-center"
                       onError={(e) => {
-                        // Fallback image handling
                         (e.target as HTMLElement).style.display = 'none';
                       }}
                     />
