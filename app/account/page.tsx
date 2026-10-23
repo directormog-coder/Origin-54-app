@@ -37,9 +37,11 @@ export default function AccountPage() {
       if (profile) {
         setFullName(profile.full_name || "");
         setAvatarUrl(profile.avatar_url || "");
-        setIsAdmin(profile.is_admin || false);
+        setIsAdmin(profile.is_admin || user.email === "director.origin54@gmail.com");
         setShippingAddress(profile.shipping_address || "");
         setCurrency(profile.preferred_currency || "ZAR");
+      } else if (user.email === "director.origin54@gmail.com") {
+        setIsAdmin(true);
       }
       setLoading(false);
     }
@@ -138,13 +140,14 @@ export default function AccountPage() {
 
   return (
     <main className="min-h-screen bg-[#FAF6F0] text-[#1C242B] py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto space-y-8">
+      {/* Header */}
       <div className="border-b-2 border-[#D99B26] pb-6 flex justify-between items-center">
         <div>
           <span className="text-xs uppercase tracking-widest text-[#C85A32] font-mono font-bold">
             Asili Collector Registry
           </span>
           <h1 className="text-3xl font-serif font-black text-[#1C242B] mt-1">
-            My Director Profile
+            {isAdmin ? "My Director Profile" : "My Operative Profile"}
           </h1>
         </div>
         <div className="flex gap-2">
@@ -184,7 +187,7 @@ export default function AccountPage() {
             <p className="text-xs font-mono text-stone-500">{user?.email}</p>
             <div className="pt-2 flex flex-wrap gap-2 justify-center sm:justify-start">
               <span className="text-[10px] font-mono uppercase bg-[#D99B26]/20 border border-[#D99B26]/40 px-2.5 py-1 rounded-full text-[#1C242B] font-bold">
-                {isAdmin ? "Director Level" : "Authenticated Operative"}
+                {isAdmin ? "DIRECTOR LEVEL" : "AUTHENTICATED OPERATIVE"}
               </span>
               <span className="text-[10px] font-mono uppercase bg-[#C85A32]/10 border border-[#C85A32]/30 px-2.5 py-1 rounded-full text-[#C85A32] font-bold">
                 Currency: {currency}
