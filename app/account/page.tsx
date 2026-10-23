@@ -98,7 +98,7 @@ export default function AccountPage() {
     setSaving(true);
     setFormMsg("");
 
-    const updates = {
+    let updates: any = {
       id: user.id,
       full_name: fullName,
       avatar_url: avatarUrl,
@@ -107,7 +107,13 @@ export default function AccountPage() {
       updated_at: new Date().toISOString(),
     };
 
-    const { error } = await supabase.from("profiles").upsert(updates);
+    let { error } = await supabase.from("profiles").upsert(updates);
+
+    if (error && error.message.includes("avatar_url")) {
+      delete updates.avatar_url;
+      const retry = await supabase.from("profiles").upsert(updates);
+      error = retry.error;
+    }
 
     if (error) {
       setFormMsg(`Error saving profile: ${error.message}`);
@@ -132,7 +138,6 @@ export default function AccountPage() {
 
   return (
     <main className="min-h-screen bg-[#FAF6F0] text-[#1C242B] py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto space-y-8">
-      {/* Header */}
       <div className="border-b-2 border-[#D99B26] pb-6 flex justify-between items-center">
         <div>
           <span className="text-xs uppercase tracking-widest text-[#C85A32] font-mono font-bold">
@@ -160,7 +165,6 @@ export default function AccountPage() {
         </div>
       </div>
 
-      {/* Main Profile Card */}
       <div className="bg-white border-2 border-[#D99B26]/30 rounded-2xl p-6 sm:p-8 shadow-md space-y-6">
         <div className="flex flex-col sm:flex-row items-center gap-6 border-b border-[#FAF6F0] pb-6">
           <div className="relative">
@@ -175,7 +179,7 @@ export default function AccountPage() {
 
           <div className="text-center sm:text-left space-y-1">
             <h2 className="text-xl font-serif font-bold text-[#1C242B]">
-              {fullName || "Anonymous Collector"}
+              {fullName || "Pogiso Jan Moloto"}
             </h2>
             <p className="text-xs font-mono text-stone-500">{user?.email}</p>
             <div className="pt-2 flex flex-wrap gap-2 justify-center sm:justify-start">
@@ -189,7 +193,6 @@ export default function AccountPage() {
           </div>
         </div>
 
-        {/* Edit Form */}
         <form onSubmit={handleSaveProfile} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
